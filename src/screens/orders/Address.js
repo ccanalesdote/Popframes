@@ -35,7 +35,7 @@ const Address = ({ ...props }) => {
     const [blockAddress, setBlockAddress] = useState(false);
     const [selectAddress, setSelectAddress] = useState([]);
     const [imagesCount, setImagesCount] = useState(0);
-    const [totalDescription, setTotalDescription] = useState('Imprimir $0');
+    const [totalDescription, setTotalDescription] = useState('Pay $0');
     const [total, setTotal] = useState(0);
     const [subTotal, setSubTotal] = useState(0);
     const [dialogVisible, setDialogVisible] = useState(false);
@@ -54,7 +54,7 @@ const Address = ({ ...props }) => {
 
     const getAmount = async () => {
         let images_count = await AsyncStorage.getItem('images_count');
-        let total = calculateDescriptionTotal(images_count, 'Pagar');
+        let total = calculateDescriptionTotal(images_count, 'Pay');
         let number = calculateTotal(images_count);
         let price = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         setImagesCount(images_count);
@@ -65,7 +65,7 @@ const Address = ({ ...props }) => {
 
     const pay = async () => {
         if (loadingPhotos) {
-            Alert.alert('Cargando...', 'Espera unos segundos, aún no se han cargado todas tus fotos.');
+            Alert.alert('Loading...', 'Wait a few seconds, not all your photos have been uploaded yet.');
         } else {
             if (addressId == 0) {
                 let address_id = await saveAddress();
@@ -187,7 +187,7 @@ const Address = ({ ...props }) => {
                 Alert.alert('Error', result.msg);
             }
         } else {
-            Alert.alert('Error', 'Se deben completar todos los campos de dirección');
+            Alert.alert('Error', 'All address fields must be completed');
         }
     }
 
@@ -340,7 +340,7 @@ const Address = ({ ...props }) => {
 
     const getPromoDiscount = async (promo_code) => {
         if (!promoCode) {
-            Alert.alert('Error', 'Debe ingresar el código promocional');
+            Alert.alert('Error', 'You must enter the promocode');
             return false;
         }
         let token = await AsyncStorage.getItem('token');
@@ -361,7 +361,7 @@ const Address = ({ ...props }) => {
             let subtotal = calculateTotal(imagesCount);
             let total = subtotal - discount;
             let price = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-            setTotalDescription(`Pagar ${price}`);
+            setTotalDescription(`Pay ${price}`);
             setDiscount(discount_format);
             setTotal(price);
             setPromoCodeID(id);
@@ -409,20 +409,20 @@ const Address = ({ ...props }) => {
                 <Text
                     allowFontScaling={false}
                     style={styles.title}>
-                    Dirección en envío
+                    Shipping address
 			    </Text>
                 <Card containerStyle={{ borderRadius: 10, borderColor: '#FFF', padding: 0 }}>
                     <View style={{ paddingHorizontal: 20, paddingTop: 20, marginBottom: 16 }}>
                         <Text
                             allowFontScaling={false}
                             style={styles.total}>
-                            Direcciónes guardadas previamente
+                            Addresses previously saved
                         </Text>
                     </View>
                     <RNPickerSelect
                         /* useNativeAndroidPickerStyle={false} */
                         style={pickerStyle}
-                        placeholder={{ label: 'Nueva dirección', value: 0 }}
+                        placeholder={{ label: 'New address', value: 0 }}
                         onValueChange={(value) => changeAddress(value)}
                         items={selectAddress}
                         value={addressId}
@@ -441,49 +441,49 @@ const Address = ({ ...props }) => {
                     />
                     <Input
                         allowFontScaling={false}
-                        inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 20 }}
+                        inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 24 }}
                         inputStyle={{ color: '#000', fontFamily: 'SFUIText-Regular', marginLeft: 10, fontSize: 16 }}
                         placeholderTextColor='#C8C9CB'
-                        placeholder='Nombre&nbsp;dirección'
+                        placeholder='Address&nbsp;name'
                         onChangeText={text => setNameAddress(text)}
                         disabled={blockAddress}
                         value={nameAddress}
                     />
                     <Input
                         allowFontScaling={false}
-                        inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 20 }}
+                        inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 0 }}
                         inputStyle={{ color: '#000', fontFamily: 'SFUIText-Regular', marginLeft: 10, fontSize: 16 }}
                         placeholderTextColor='#C8C9CB'
-                        placeholder='Dirección'
+                        placeholder='Address'
                         onChangeText={text => setAddress(text)}
                         disabled={blockAddress}
                         value={address}
                     />
                     <Input
                         allowFontScaling={false}
-                        inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 20 }}
+                        inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 0 }}
                         inputStyle={{ color: '#000', fontFamily: 'SFUIText-Regular', marginLeft: 10, fontSize: 16 }}
                         placeholderTextColor='#C8C9CB'
-                        placeholder='Número'
+                        placeholder='Number'
                         onChangeText={text => setNumber(text)}
                         disabled={blockAddress}
                         value={number}
                     />
                     <Input
                         allowFontScaling={false}
-                        inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 20 }}
+                        inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 0 }}
                         inputStyle={{ color: '#000', fontFamily: 'SFUIText-Regular', marginLeft: 10, fontSize: 16 }}
                         placeholderTextColor='#C8C9CB'
-                        placeholder='Ciudad'
+                        placeholder='City'
                         onChangeText={text => setCity(text)}
                         disabled={blockAddress}
                         value={city}
                     />
-                    <View style={{ height: 20 }} />
+                    <View style={{ height: 0 }} />
                     <RNPickerSelect
                         /* useNativeAndroidPickerStyle={false} */
                         style={pickerStyle}
-                        placeholder={{ label: 'Selecciona una Región' }}
+                        placeholder={{ label: 'Select a Region' }}
                         onValueChange={(value) => changeRegion(value)}
                         items={selectRegions}
                         disabled={blockAddress}
@@ -495,7 +495,7 @@ const Address = ({ ...props }) => {
                     <View
                         style={{
                             marginTop: 0,
-                            marginBottom: 20,
+                            marginBottom: 24,
                             marginHorizontal: 10,
                             borderBottomColor: '#C8C9CB',
                             borderBottomWidth: 1
@@ -504,7 +504,7 @@ const Address = ({ ...props }) => {
                     <RNPickerSelect
                         /* useNativeAndroidPickerStyle={false} */
                         style={pickerStyle}
-                        placeholder={{ label: 'Selecciona una Provincia' }}
+                        placeholder={{ label: 'Select a Province' }}
                         onValueChange={(value) => changeProvince(value)}
                         items={selectProvinces}
                         disabled={blockAddress}
@@ -516,7 +516,7 @@ const Address = ({ ...props }) => {
                     <View
                         style={{
                             marginTop: 0,
-                            marginBottom: 20,
+                            marginBottom: 24,
                             marginHorizontal: 10,
                             borderBottomColor: '#C8C9CB',
                             borderBottomWidth: 1
@@ -525,7 +525,7 @@ const Address = ({ ...props }) => {
                     <RNPickerSelect
                         /* useNativeAndroidPickerStyle={false} */
                         style={pickerStyle}
-                        placeholder={{ label: 'Selecciona una Comuna' }}
+                        placeholder={{ label: 'Select a Commune' }}
                         onValueChange={(value) => setCommune(value)}
                         items={selectCommunes}
                         disabled={blockAddress}
@@ -552,7 +552,7 @@ const Address = ({ ...props }) => {
                                 fontFamily="SFUIText-Regular"
                                 checkedColor='#F52D56'
                                 textStyle={{ fontSize: 16, color: '#999999', fontWeight: 'normal' }}
-                                title='Guardar esta dirección para futuras compras'
+                                title='Save this address for future purchases'
                                 onPress={() => setSaveNew(!saveNew)}
                                 checked={saveNew}
                             /> : <View style={{ height: 20 }} />
@@ -561,7 +561,7 @@ const Address = ({ ...props }) => {
                 <Text
                     allowFontScaling={false}
                     style={styles.title}>
-                    Resumen de tu compra
+                    Your Order
 			    </Text>
                 <Card containerStyle={{ borderRadius: 10, borderColor: '#FFF', padding: 0 }}>
                     <View style={{ paddingHorizontal: 20, paddingTop: 30, flexDirection: 'row' }} >
@@ -569,24 +569,24 @@ const Address = ({ ...props }) => {
                             <Text
                                 allowFontScaling={false}
                                 style={styles.name}>
-                                Impresión {imagesCount} fotos
+                                Print {imagesCount} photos
                             </Text>
                             <Text
                                 allowFontScaling={false}
                                 style={styles.name}>
-                                Album de fotos
+                                Photo album
                             </Text>
                             <Text
                                 allowFontScaling={false}
                                 style={styles.name}>
-                                Despacho
+                                Shipping
                             </Text>
                             {
                                 discount > 0 ?
                                     <Text
                                         allowFontScaling={false}
                                         style={styles.namePromo}>
-                                        Descuento
+                                        Discount
                                     </Text> : null
                             }
                         </View>
@@ -649,7 +649,7 @@ const Address = ({ ...props }) => {
                         <Text
                             allowFontScaling={false}
                             style={styles.promo}>
-                            Ingresar código promocional
+                            Add promocode
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -675,16 +675,16 @@ const Address = ({ ...props }) => {
                 loading={load}
             /> */}
             <ConfirmDialog
-                title="Código Promocional"
+                title="Promotional Code"
                 visible={dialogVisible}
                 onTouchOutside={() => setDialogVisible(false)}
                 positiveButton={{
-                    title: "Canjear",
+                    title: "Redeem",
                     titleStyle: { color: '#000' },
                     onPress: () => getPromoDiscount(promoCode)
                 }}
                 negativeButton={{
-                    title: "Cancelar",
+                    title: "Cancel",
                     titleStyle: { color: '#787879' },
                     onPress: () => setDialogVisible(false)
                 }} >
@@ -694,7 +694,7 @@ const Address = ({ ...props }) => {
                         inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 10 }}
                         inputStyle={{ color: '#000', fontFamily: 'SFUIText-Regular', marginLeft: 0, fontSize: 16 }}
                         placeholderTextColor='#C8C9CB'
-                        placeholder='Código'
+                        placeholder='Code'
                         autoCapitalize='characters'
                         onChangeText={(value) => setPromoCode(value)}
                         value={promoCode}
