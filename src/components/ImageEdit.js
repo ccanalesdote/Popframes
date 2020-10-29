@@ -1,33 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Animated, Dimensions, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 import { Image } from 'react-native-elements';
-import Horizontal from '../assets/icons/horizontal.png';
-import Vertical from '../assets/icons/vertical.png';
-import FullHorizontal from '../assets/icons/full-horizontal.png';
-import FullVertical from '../assets/icons/full-vertical.png';
-import HorizontalHover from '../assets/icons/horizontal-hover.png';
-import VerticalHover from '../assets/icons/vertical-hover.png';
-import FullHorizontalHover from '../assets/icons/full-horizontal-hover.png';
-import FullVerticalHover from '../assets/icons/full-vertical-hover.png';
+import Refresh from '../assets/icons/refresh.png';
 import ImageCropper from 'react-native-simple-image-cropper';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { croppedImages, doCropImages } from '../store/atoms';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const window = Dimensions.get('window');
 const w = window.width;
-const h = window.height;
-
-const CROP_AREA_WIDTH = w;
-const CROP_AREA_HEIGHT = w;
 
 const ImageEdit = ({ image, cropImages }) => {
 
     const [imageHeight, setImageHeight] = useState(w - 120);
     const [cropperParams, setCropperParams] = useState({});
-    const [type, setType] = useState(1);
+    const [vertical, setVertical] = useState(false);
     // gestión de estado para las imágenes recortadas
     const setCroppedImages = useSetRecoilState(croppedImages);
     //const croppedImagesSelected = useRecoilValue(croppedImages);
@@ -35,13 +23,12 @@ const ImageEdit = ({ image, cropImages }) => {
     const doCropImagesState = useRecoilValue(doCropImages);
 
     useEffect(() => {
-        if (type == 1 || type == 3) {
+        if (vertical) {
+            setImageHeight(w + 90);
+        } else {
             setImageHeight(w - 120);
         }
-        if (type == 2 || type == 4) {
-            setImageHeight(w - 30);
-        }
-    }, [type]);
+    }, [vertical]);
 
     // se observa evento que dispara el recorte de imágenes
     useEffect(() => {
@@ -105,47 +92,14 @@ const ImageEdit = ({ image, cropImages }) => {
                     areaColor="black"
                     setCropperParams={changeCropperParams}
                 />
-                {/* <View style={{ backgroundColor: '#FFF', width: 180 }}>
-                    <Text>{image.key}</Text>
-                </View> */}
             </View>
-            <View style={{ marginLeft: 10, flexDirection: 'row' }} >
+            <View style={{ marginLeft: 10, flexDirection: 'row', alignSelf: 'flex-end' }} >                
                 <TouchableOpacity
                     activeOpacity={0.6}
-                    onPress={() => setType(1)}>
+                    onPress={() => setVertical(!vertical)}>
                     <View style={styles.icon} >
                         <Image
-                            source={type == 1 ? HorizontalHover : Horizontal}
-                            style={styles.stretch}
-                        />
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    activeOpacity={0.6}
-                    onPress={() => setType(2)}>
-                    <View style={styles.icon} >
-                        <Image
-                            source={type == 2 ? VerticalHover : Vertical}
-                            style={styles.stretch}
-                        />
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    activeOpacity={0.6}
-                    onPress={() => setType(3)}>
-                    <View style={styles.icon} >
-                        <Image
-                            source={type == 3 ? FullHorizontalHover : FullHorizontal}
-                            style={styles.stretch}
-                        />
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    activeOpacity={0.6}
-                    onPress={() => setType(4)}>
-                    <View style={styles.icon} >
-                        <Image
-                            source={type == 4 ? FullVerticalHover : FullVertical}
+                            source={Refresh}
                             style={styles.stretch}
                         />
                     </View>
@@ -162,12 +116,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#F7F7F7'
     },
     stretch: {
-        width: 50,
-        height: 50,
+        width: 35,
+        height: 35,
         resizeMode: 'contain',
     },
     icon: {
-        flex: 1,
+        flex: 1,        
         padding: 14
     },
     heightHorizontal: {
