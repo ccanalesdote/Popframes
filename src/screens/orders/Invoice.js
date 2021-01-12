@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Alert,
-    Dimensions,
-    Platform,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
-} from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Invoice = ({ ...props }) => {
 
+    const [load, setLoad] = useState(false);
+
     return (
         <View style={styles.root}>
             <View style={styles.body}>
+                <View>
+                    <TouchableOpacity
+                        style={styles.payButton}
+                        onPress={console.log('final')}>
+                        {
+                            load ?
+                                <ActivityIndicator size="small" color="#FFF" /> :
+                                <Text style={styles.payText}>{totalDescription}</Text>
+                        }
+                    </TouchableOpacity>
+                </View>
                 {/* <Button
                     buttonStyle={styles.payButton}
                     titleStyle={styles.payText}

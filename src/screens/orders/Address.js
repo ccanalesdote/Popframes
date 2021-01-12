@@ -9,6 +9,7 @@ import { useRecoilValue } from 'recoil';
 import { calculateDescriptionTotal, calculateTotal } from "../../utils/Helpers";
 import { croppedImages } from '../../store/atoms';
 import { color } from 'react-native-reanimated';
+import { ApplePay } from 'react-native-apay';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -64,7 +65,37 @@ const Address = ({ ...props }) => {
     }
 
     const pay = async () => {
-        if (loadingPhotos) {
+        console.log('final test');        
+        const requestData = {
+            merchantIdentifier: 'merchant.com.popframes',
+            supportedNetworks: ['mastercard', 'visa'],
+            countryCode: 'US',
+            currencyCode: 'USD',
+            paymentSummaryItems: [
+                {
+                    label: 'Payment Test',
+                    amount: '0.50',
+                },
+            ],
+        }
+        console.log(requestData);
+        // Check if ApplePay is available
+        if (ApplePay.canMakePayments) {
+            ApplePay.requestPayment(requestData)
+                .then((paymentData) => {
+                    console.log(paymentData);
+                    // Simulate a request to the gateway
+                    setTimeout(() => {
+                        // Show status to user ApplePay.SUCCESS || ApplePay.FAILURE
+                        ApplePay.complete(ApplePay.SUCCESS)
+                            .then(() => {
+                                console.log('completed');
+                                // do something
+                            });
+                    }, 1000);
+                });
+        };
+        /* if (loadingPhotos) {
             Alert.alert('Loading...', 'Wait a few seconds, not all your photos have been uploaded yet.');
         } else {
             if (addressId == 0) {
@@ -77,7 +108,7 @@ const Address = ({ ...props }) => {
             setAddressId(0);
             cleanAddress();
             props.navigation.navigate('Invoice');
-        }
+        } */
     }
 
     const uploadPhotos = async () => {
