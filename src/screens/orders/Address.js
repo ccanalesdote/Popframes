@@ -90,6 +90,7 @@ const Address = ({ ...props }) => {
                         ApplePay.complete(ApplePay.SUCCESS)
                             .then(() => {
                                 console.log('completed');
+                                Alert.alert('OK', 'pago realizado correctamente');
                                 // do something
                             });
                     }, 1000);
