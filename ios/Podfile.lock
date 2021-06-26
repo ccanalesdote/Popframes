@@ -245,17 +245,17 @@ PODS:
     - React-cxxreact (= 0.63.2)
     - React-jsi (= 0.63.2)
   - React-jsinspector (0.63.2)
-  - react-native-cameraroll (4.0.0):
-    - React
+  - react-native-cameraroll (4.0.4):
+    - React-Core
   - react-native-image-editor (2.3.0):
     - React
     - React-RCTImage
-  - react-native-image-resizer (1.2.6):
-    - React
-  - react-native-safe-area-context (3.1.7):
-    - React
-  - react-native-webview (10.8.2):
-    - React
+  - react-native-image-resizer (1.4.5):
+    - React-Core
+  - react-native-safe-area-context (3.2.0):
+    - React-Core
+  - react-native-webview (10.10.2):
+    - React-Core
   - React-RCTActionSheet (0.63.2):
     - React-Core/RCTActionSheetHeaders (= 0.63.2)
   - React-RCTAnimation (0.63.2):
@@ -320,19 +320,19 @@ PODS:
     - React-Core
   - RNApplePay (1.3.1):
     - React
-  - RNCAsyncStorage (1.12.0):
+  - RNCAsyncStorage (1.12.1):
+    - React-Core
+  - RNCMaskedView (0.1.11):
     - React
-  - RNCMaskedView (0.1.10):
-    - React
-  - RNCPicker (1.6.6):
-    - React
-  - RNGestureHandler (1.7.0):
-    - React
-  - RNReanimated (1.13.0):
-    - React
-  - RNScreens (2.10.1):
-    - React
-  - RNVectorIcons (7.0.0):
+  - RNCPicker (1.8.1):
+    - React-Core
+  - RNGestureHandler (1.10.3):
+    - React-Core
+  - RNReanimated (1.13.3):
+    - React-Core
+  - RNScreens (2.18.1):
+    - React-Core
+  - RNVectorIcons (7.1.0):
     - React
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -525,11 +525,11 @@ SPEC CHECKSUMS:
   React-jsi: 54245e1d5f4b690dec614a73a3795964eeef13a8
   React-jsiexecutor: 8ca588cc921e70590820ce72b8789b02c67cce38
   React-jsinspector: b14e62ebe7a66e9231e9581279909f2fc3db6606
-  react-native-cameraroll: 7c2e22b5a8e8f30fc6d5566c942b225ca7129752
+  react-native-cameraroll: 7c6c7ca84844f93b3dac9a87670bbad6541684ec
   react-native-image-editor: bd67912f38a8e7a895bf6eb8f445acdcefd8fd0c
-  react-native-image-resizer: f9fd7a61ffb3683987a6528e15e32bc32eb9dee3
-  react-native-safe-area-context: fcece23844742b6f7f0627c3715b806a7deff946
-  react-native-webview: 5c41ea867f6928bea865bd49a2d379161d6643e9
+  react-native-image-resizer: 506412a2bdd70dde64a61e13505ce10f61a04369
+  react-native-safe-area-context: e471852c5ed67eea4b10c5d9d43c1cebae3b231d
+  react-native-webview: ef8d30ecc5baf6bf7821690180c2f9bf2bdf00c0
   React-RCTActionSheet: 910163b6b09685a35c4ebbc52b66d1bfbbe39fc5
   React-RCTAnimation: 9a883bbe1e9d2e158d4fb53765ed64c8dc2200c6
   React-RCTBlob: 39cf0ece1927996c4466510e25d2105f67010e13
@@ -542,13 +542,13 @@ SPEC CHECKSUMS:
   ReactCommon: a0a1edbebcac5e91338371b72ffc66aa822792ce
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
   RNApplePay: 568747d052d9848014bdccf78782b2a48c28eceb
-  RNCAsyncStorage: 3eea36d9460c5159b592f9ecbe5a77f8aca98006
-  RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
-  RNCPicker: 494015f2b7ec4bee5484b6f235aa19691426dcdb
-  RNGestureHandler: b6b359bb800ae399a9c8b27032bdbf7c18f08a08
-  RNReanimated: 89f5e0a04d1dd52fbf27e7e7030d8f80a646a3fc
-  RNScreens: b748efec66e095134c7166ca333b628cd7e6f3e2
-  RNVectorIcons: da6fe858f5a65d7bbc3379540a889b0b12aa5976
+  RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
+  RNCMaskedView: f127cd9652acfa31b91dcff613e07ba18b774db6
+  RNCPicker: 914b557e20b3b8317b084aca9ff4b4edb95f61e4
+  RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
+  RNReanimated: 514a11da3a2bcc6c3dfd9de32b38e2b9bf101926
+  RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
+  RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   Yoga: 7740b94929bbacbddda59bf115b5317e9a161598
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

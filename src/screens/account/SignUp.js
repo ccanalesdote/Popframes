@@ -1,5 +1,6 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Alert, Image, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { API } from '../../services/Axios';
 import { Button, CheckBox, Input } from 'react-native-elements';
 import { validateEmail } from '../../utils/Helpers';
 import BackButton from '../../components/BackButton';
@@ -34,23 +35,18 @@ const SignUp = ({ ...props }) => {
         }
         try {
             setLoading(true);
-            let response = await fetch('http://api.impri.cl/user', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name,
-                    email,
-                    password
-                })
+            let response = await API.post('/user', {
+                name,
+                email,
+                password
             });
-            let result = await response.json();
             setLoading(false);
-            if (result.state) {
-                Alert.alert('Success', result.msg);
+            console.log(response.data);
+            if (response.data.state) {
+                Alert.alert('Success', response.data.msg);
+                props.navigation.push('SignIn');
             } else {
-                Alert.alert('Error', result.msg);
+                Alert.alert('Error', response.data.msg);
             }
         } catch (error) {
             Alert.alert(error);

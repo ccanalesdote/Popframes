@@ -1,7 +1,8 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Alert, Image, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Button, CheckBox, Input } from 'react-native-elements';
+import { API } from '../../services/Axios';
+import { Button, Input } from 'react-native-elements';
 import { validateEmail } from '../../utils/Helpers';
 import BackButton from '../../components/BackButton';
 
@@ -24,28 +25,21 @@ const SignIn = ({ ...props }) => {
         }
         try {
             setLoading(true);
-            let response = await fetch('http://api.impri.cl/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email,
-                    password
-                }),
+            let response = await API.post('/login', {
+                email,
+                password
             });
-            let result = await response.json();
             setLoading(false);
-            if (result.state) {
-                let { authorization } = response.headers.map;
-                let { email, name, user_id } = result.user;
+            if (response.data.state) {
+                let { authorization } = response.headers;
+                let { email: email_user, name, user_id } = response.data.user;
                 AsyncStorage.setItem('token', authorization);
-                AsyncStorage.setItem('email', email);
+                AsyncStorage.setItem('email', email_user);
                 AsyncStorage.setItem('name', name);
                 AsyncStorage.setItem('user_id', user_id.toString());
                 props.navigation.push('Auth');
             } else {
-                Alert.alert('Error', result.mensaje);
+                Alert.alert('Error', response.data.msg);
             }
         } catch (error) {
             Alert.alert(error.message);
