@@ -136,16 +136,8 @@ const Address = ({ ...props }) => {
                     name: file_name
                 });
             }
-            let response = await fetch('http://localhost:8082/file', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': token
-                },
-                body: formData
-            });
-            let result = await response.json();
-            console.log(result);
+            let response = await FormAPI.post('/file', formData);
+            console.log(response.data);
             setLoadingPhotos(false);
         } catch (error) {
             console.log('There has been a problem with your fetch operation: ' + error.message);
