@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, Fragment } from 'react';
 import { Alert, Dimensions, Image, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { API } from '../../services/Axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import InstagramLogin from 'react-native-instagram-login';
 import CameraRollSelector from "react-native-camera-roll-selector";
@@ -31,6 +32,10 @@ const InstagramProfile = ({ ...props }) => {
     const imagesSelected = useRecoilValue(images);
 
     const _instagramLoginRef = useRef(null);
+
+    useEffect(() => {
+        console.log(photos);
+    }, [photos]);
 
     useEffect(() => {
         console.log(_instagramLoginRef);
@@ -76,48 +81,42 @@ const InstagramProfile = ({ ...props }) => {
     };
 
     const getMultimedia = async (accessToken) => {
-        try {
-            let response = await fetch(`https://graph.instagram.com/me/media?fields=id,media_type,media_url&access_token=${accessToken}`, {
-                method: 'GET'
-            });
-            let result = await response.json();
-            if (result.error) {
-                setError(result.error);
-                setLoad(true);
-            } else {
-                let images = result.data;
-                let size = images.length;
-                let next = result.paging.next;
-                setNextPage(next);
-                /* let index = 0;
-                for await (const item of images) {
-                    if (item.media_type === 'IMAGE') {
-                        let result = await RNFetchBlob.config({ fileCache: true }).fetch('GET', item.media_url);
-                        let path = result.path();
-                        let image = { uri: `file://${path}` };
-                        setPhotos(oldArray => [...oldArray, image]);
-                    }
-                    if (index == size - 1) {
-                        setError(false);
-                        setLoad(true);
-                    }
-                    index++;
-                } */
-                images.forEach(async (item, index) => {
-                    if (item.media_type === 'IMAGE') {
-                        let result = await RNFetchBlob.config({ fileCache: true }).fetch('GET', item.media_url);
-                        let path = result.path();
-                        let image = { uri: `file://${path}`, id: item.id };
-                        setPhotos(oldArray => [...oldArray, image]);
-                    }
-                    if (index == size - 1) {
-                        setError(false);
-                        setLoad(true);
+        if (accessToken) {
+            console.log(accessToken);
+            try {
+                let response = await API.get('https://graph.instagram.com/me/media', {
+                    params: {
+                        fields: 'id,media_type,media_url',
+                        access_token: accessToken
                     }
                 });
+                if (response.data.error) {
+                    setError(response.data.error);
+                    setLoad(true);
+                } else {
+                    let instagram_images_local = [];
+                    let instagram_images = response.data.data;
+                    let size = instagram_images.length;
+                    let next = response.data.paging.next;
+                    setNextPage(next);
+                    for (const item of instagram_images) {
+                        if (item.media_type === 'IMAGE') {
+                            let result = await RNFetchBlob.config({ fileCache: true }).fetch('GET', item.media_url);
+                            let path = result.path();
+                            let image = { uri: `file://${path}`, id: item.id };
+                            if (!instagram_images_local.includes(image)) {
+                                instagram_images_local.push(image);
+                            }                            
+                        }
+                    }
+                    setPhotos(instagram_images_local);
+                    setError(false);
+                    setLoad(true);
+                }
+            } catch (e) {
+                console.log(e);
+                Alert.alert(e.message);
             }
-        } catch (error) {
-            Alert.alert(error.message);
         }
     }
 
@@ -137,21 +136,6 @@ const InstagramProfile = ({ ...props }) => {
                 let next = result.paging.next;
                 setNextPage(next);
                 console.log(next);
-                /* let index = 0;
-                for await (const item of images) {
-                    if (item.media_type === 'IMAGE') {
-                        let result = await RNFetchBlob.config({ fileCache: true }).fetch('GET', item.media_url);
-                        let path = result.path();
-                        let image = { uri: `file://${path}` };
-                        setPhotos(oldArray => [...oldArray, image]);
-                    }
-                    if (index == size - 1) {
-                        setError(false);
-                        setLoad(true);
-                    }
-                    index++;
-                } */
-                //setRefresh(true);
                 images.forEach(async (item, index) => {
                     if (item.media_type === 'IMAGE') {
                         console.log(item.media_url);
@@ -202,10 +186,10 @@ const InstagramProfile = ({ ...props }) => {
                             <Text
                                 style={styles.title}>
                                 You don't have your instagram associated yet
-				            </Text>
+                            </Text>
                             <Text style={styles.titleBold}>
                                 Connect it here
-				            </Text>
+                            </Text>
                         </View>
                         <Image
                             source={require('../../assets/images/arrow.png')}
@@ -247,7 +231,7 @@ const InstagramProfile = ({ ...props }) => {
                                 resolve({
                                     assets: photos,
                                     pageInfo: {
-                                        hasNextPage: true
+                                        hasNextPage: false
                                     }
                                 });
                             }}

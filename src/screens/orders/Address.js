@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Alert, Dimensions, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Button, Card, CheckBox, Input } from 'react-native-elements';
+import { API, FormAPI } from '../../services/Axios';
+import { Card, CheckBox, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import RNPickerSelect from 'react-native-picker-select';
 import { ConfirmDialog } from 'react-native-simple-dialogs';
@@ -12,7 +13,6 @@ import { color } from 'react-native-reanimated';
 import { ApplePay } from 'react-native-apay';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const Address = ({ ...props }) => {
 
@@ -48,9 +48,9 @@ const Address = ({ ...props }) => {
 
     useEffect(() => {
         uploadPhotos();
-        getUserAddress();
-        getRegions();
-        getAmount();
+        // getUserAddress();
+        // getRegions();
+        // getAmount();
     }, []);
 
     const getAmount = async () => {
@@ -65,7 +65,7 @@ const Address = ({ ...props }) => {
     }
 
     const pay = async () => {
-        console.log('final test');        
+        console.log('final test');
         const requestData = {
             merchantIdentifier: 'merchant.com.popframes',
             supportedNetworks: ['mastercard', 'visa'],
@@ -115,22 +115,28 @@ const Address = ({ ...props }) => {
     const uploadPhotos = async () => {
         try {
             setLoadingPhotos(true);
-            let token = await AsyncStorage.getItem('token');
             let orderID = await AsyncStorage.getItem('order_id');
+            let token = await AsyncStorage.getItem('token');
+            console.log('orderID', orderID);
             let formData = new FormData();
             formData.append("order_id", orderID);
-            croppedImagesSelected.forEach((item, i) => {
-                console.log(item.cropped_uri);
+            formData.append("test", 'prueba');
+            let i = 0;
+            console.log('array', croppedImagesSelected);
+            for (const item of croppedImagesSelected) {
+                i++;
                 var ext = (item.cropped_uri).split(".");
                 let name = `${Date.now().toString()}_${item.key}_${i}`;
                 let file_name = `${name}.${ext[(ext.length - 1)]}`;
+                console.log(file_name);
+                console.log(item.cropped_uri);
                 formData.append("doc", {
                     uri: item.cropped_uri,
                     type: item.type,
                     name: file_name
                 });
-            });
-            let response = await fetch('http://api.impri.cl/file', {
+            }
+            let response = await fetch('http://localhost:8082/file', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -423,17 +429,6 @@ const Address = ({ ...props }) => {
         }
     });
 
-    /* const pickerStyle = StyleSheet.create({
-        inputAndroid: {
-            //color: "#929292",
-            color: "#000",
-            fontSize: 20,
-            fontFamily: 'SFUIText-Regular',
-            marginVertical: 4,
-            marginLeft: 15
-        }
-    }); */
-
     return (
         <View style={styles.root}>
             <ScrollView
@@ -442,7 +437,7 @@ const Address = ({ ...props }) => {
                     allowFontScaling={false}
                     style={styles.title}>
                     Shipping address
-			    </Text>
+                </Text>
                 <Card containerStyle={{ borderRadius: 10, borderColor: '#FFF', padding: 0 }}>
                     <View style={{ paddingHorizontal: 20, paddingTop: 20, marginBottom: 16 }}>
                         <Text
@@ -594,7 +589,7 @@ const Address = ({ ...props }) => {
                     allowFontScaling={false}
                     style={styles.title}>
                     Your Order
-			    </Text>
+                </Text>
                 <Card containerStyle={{ borderRadius: 10, borderColor: '#FFF', padding: 0 }}>
                     <View style={{ paddingHorizontal: 20, paddingTop: 30, flexDirection: 'row' }} >
                         <View style={{ flex: 4 }}>
@@ -748,7 +743,6 @@ const styles = StyleSheet.create({
         left: SCREEN_WIDTH * .1,
         width: SCREEN_WIDTH * .8,
         borderRadius: 10,
-        //backgroundColor: '#F52D56DC',
         backgroundColor: '#F52D56',
         height: 52,
         fontSize: 24,
@@ -806,28 +800,5 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline'
     },
 });
-/* 
-const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-        fontSize: 28,
-        paddingVertical: 12,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 4,
-        color: 'black',
-        paddingRight: 30, // to ensure the text is never behind the icon
-    },
-    inputAndroid: {
-        fontSize: 28,
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-        borderWidth: 0.5,
-        borderColor: 'purple',
-        borderRadius: 8,
-        color: 'black',
-        paddingRight: 30, // to ensure the text is never behind the icon
-    },
-}); */
 
 export default Address;

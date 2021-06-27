@@ -1,7 +1,8 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const URL = 'http://popframesapi-env.eba-umrqg6b3.us-east-1.elasticbeanstalk.com';
+// const URL = 'http://popframesapi-env.eba-umrqg6b3.us-east-1.elasticbeanstalk.com';
+const URL = 'http://localhost:8082';
 
 export const API = axios.create({
     baseURL: URL,
@@ -19,12 +20,10 @@ export const FormAPI = axios.create({
 
 API.interceptors.request.use(
     async config => {
-        const token = await AsyncStorage.getItem('token');
-        console.log(token);
+        let token = await AsyncStorage.getItem('token');
         if (token) {
             config.headers['Authorization'] = token;
         }
-        config.headers['Content-Type'] = 'application/json';
         return config;
     },
     error => {
@@ -33,12 +32,11 @@ API.interceptors.request.use(
 );
 
 FormAPI.interceptors.request.use(
-    config => {
-        const token = localStorage.getItem('auth');
+    async config => {
+        let token = await AsyncStorage.getItem('token');
         if (token) {
             config.headers['Authorization'] = token;
         }
-        config.headers['Content-Type'] = 'application/json';
         return config;
     },
     error => {

@@ -16,16 +16,6 @@ const Customize = ({ image, addCountImage, minusCountImage, cropImages }) => {
         uri: image.uri
     }
 
-    // se crear el elemento imagen para mandarlo al arreglo de imagenes a subir
-    /* let itemImage = {
-        id: image.id,
-        filename: image.filename,
-        height: image.height,
-        width: image.width,
-        uri: image.uri,
-        type: image.type
-    }; */
-
     const [images, setImages] = useState([photo]);
     const [amount, setAmount] = useState(1);
 
@@ -68,13 +58,6 @@ const Customize = ({ image, addCountImage, minusCountImage, cropImages }) => {
                             {
                                 images.map((item, i) => (
                                     <View key={i}>
-                                        {/* <View
-                                            style={{
-                                                marginTop: 20,
-                                                borderBottomColor: '#E3E3E3',
-                                                borderBottomWidth: 1
-                                            }}
-                                        /> */}
                                         <ImageEdit image={item} cropImages={cropImages} />
                                         <View
                                             style={{
@@ -127,7 +110,6 @@ const Customize = ({ image, addCountImage, minusCountImage, cropImages }) => {
                                 </View>
                             </View>
                         </Card>
-                        {/* {croppedImage ? <Image style={{ height: 200, width: 200 }} source={{ uri: croppedImage }} /> : null} */}
                     </View> : null
             }
             <ConfirmDialog

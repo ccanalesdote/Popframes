@@ -18,7 +18,6 @@ const ImageEdit = ({ image, cropImages }) => {
     const [vertical, setVertical] = useState(false);
     // gestión de estado para las imágenes recortadas
     const setCroppedImages = useSetRecoilState(croppedImages);
-    //const croppedImagesSelected = useRecoilValue(croppedImages);
     const setDoCropImages = useSetRecoilState(doCropImages);
     const doCropImagesState = useRecoilValue(doCropImages);
 
@@ -83,7 +82,7 @@ const ImageEdit = ({ image, cropImages }) => {
     return (
 
         <View>
-            <View style={{ /* borderColor: '#e3e3e3', borderWidth: 1, */ height: imageHeight }} >
+            <View style={{ height: imageHeight, justifyContent: 'center' }} >
                 <ImageCropper
                     imageUri={image.uri}
                     cropAreaWidth={w - 30}
@@ -93,7 +92,7 @@ const ImageEdit = ({ image, cropImages }) => {
                     setCropperParams={changeCropperParams}
                 />
             </View>
-            <View style={{ marginLeft: 10, flexDirection: 'row', alignSelf: 'flex-end' }} >                
+            <View style={{ marginLeft: 10, flexDirection: 'row', alignSelf: 'flex-end' }} >               
                 <TouchableOpacity
                     activeOpacity={0.6}
                     onPress={() => setVertical(!vertical)}>

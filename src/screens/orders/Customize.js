@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Alert, Dimensions, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Button } from 'react-native-elements';
+import { API } from '../../services/Axios';
 import PhotoFrame from '../../components/PhotoFrame';
 import { ScrollView } from 'react-native-gesture-handler';
 import { calculateDescriptionTotal } from "../../utils/Helpers";
@@ -21,7 +21,6 @@ const Customize = ({ ...props }) => {
     let count = imagesSelected.length;
 
     // hooks
-    const [imagesUpload, setImagesUpload] = useState([]);
     const [imagesCount, setImagesCount] = useState(count);
     const [totalDescription, setTotalDescription] = useState('Print $0');
     const [loading, setLoading] = useState(false);
@@ -32,7 +31,6 @@ const Customize = ({ ...props }) => {
     }, []);
 
     useEffect(() => {
-        console.log(imagesCount);
         let total = calculateDescriptionTotal(imagesCount, 'Next');
         setTotalDescription(total);
         AsyncStorage.setItem('images_count', imagesCount.toString());
@@ -41,35 +39,25 @@ const Customize = ({ ...props }) => {
         }
     }, [imagesCount]);
 
-    const addCountImage = (count) => {
-        setImagesCount(imagesCount + count);
+    const addCountImage = (data) => {
+        setImagesCount(imagesCount + data);
     }
 
-    const minusCountImage = (count) => {
-        setImagesCount(imagesCount - count);
+    const minusCountImage = (data) => {
+        setImagesCount(imagesCount - data);
     }
 
     const createOrder = async () => {
         setLoading(true);
-        let token = await AsyncStorage.getItem('token');
         let UID = await AsyncStorage.getItem('user_id');
-        let response = await fetch('http://api.impri.cl/order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
-            },
-            body: JSON.stringify({
-                user_id: UID,
-                quantity: imagesCount
-            }),
+        let response = await API.post('/order', {
+            user_id: UID,
+            quantity: imagesCount
         });
-        let result = await response.json();
-        if (result.state) {
-            let order = result.order_id;
-            return order;
+        if (response.data.state) {
+            return response.data.order_id;
         } else {
-            Alert.alert('Error', result.msg);
+            Alert.alert('Error', response.data.msg);
             return 0;
         }
     }
@@ -88,7 +76,7 @@ const Customize = ({ ...props }) => {
     return (
         <View style={styles.root}>
             <ScrollView
-                //scrollEnabled={false}
+                scrollEnabled={true}
                 showsVerticalScrollIndicator={false} >
                 {
                     imagesSelected.map((item, i) => (
