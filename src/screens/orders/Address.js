@@ -48,9 +48,16 @@ const Address = ({ ...props }) => {
 
     useEffect(() => {
         uploadPhotos();
-        // getUserAddress();
-        // getRegions();
-        // getAmount();
+        getUserAddress();
+        getRegions();
+        getAmount();
+    }, []);
+
+    useEffect(() => {
+        if (croppedImagesSelected.length < 1) {
+            console.log(croppedImagesSelected.length);
+            props.navigation.navigate('Customize');
+        }
     }, []);
 
     const getAmount = async () => {
@@ -64,41 +71,49 @@ const Address = ({ ...props }) => {
         setTotal(price);
     }
 
-    const pay = async () => {
-        console.log('final test');
-        const requestData = {
-            merchantIdentifier: 'merchant.com.popframes',
-            supportedNetworks: ['mastercard', 'visa'],
-            countryCode: 'US',
-            currencyCode: 'USD',
-            paymentSummaryItems: [
-                {
-                    label: 'Payment Test',
-                    amount: '0.50',
-                },
-            ],
-        }
-        console.log(requestData);
-        // Check if ApplePay is available
-        if (ApplePay.canMakePayments) {
-            ApplePay.requestPayment(requestData)
-                .then((paymentData) => {
-                    console.log(paymentData);
-                    // Simulate a request to the gateway
-                    setTimeout(() => {
-                        // Show status to user ApplePay.SUCCESS || ApplePay.FAILURE
-                        ApplePay.complete(ApplePay.SUCCESS)
-                            .then(() => {
-                                console.log('completed');
-                                Alert.alert('OK', 'pago realizado correctamente');
-                                // do something
-                            });
-                    }, 1000);
-                });
-        };
-        /* if (loadingPhotos) {
+    const pay = async () => {        
+        if (loadingPhotos) {
             Alert.alert('Loading...', 'Wait a few seconds, not all your photos have been uploaded yet.');
         } else {
+            /* const requestData = {
+                merchantIdentifier: 'merchant.com.popframes',
+                supportedNetworks: ['mastercard', 'visa'],
+                countryCode: 'US',
+                currencyCode: 'USD',
+                paymentSummaryItems: [
+                    {
+                        label: 'Payment Test',
+                        amount: '0.50',
+                    },
+                ],
+            }
+            console.log(requestData);
+            // Check if ApplePay is available
+            if (ApplePay.canMakePayments) {                
+                ApplePay.requestPayment(requestData)
+                    .then((paymentData) => {
+                        console.log(paymentData);
+                        // Simulate a request to the gateway
+                        setTimeout(() => {
+                            // Show status to user ApplePay.SUCCESS || ApplePay.FAILURE
+                            ApplePay.complete(ApplePay.SUCCESS)
+                                .then(async () => {
+                                    console.log('completed');                                    
+                                    if (addressId == 0) {
+                                        let address_id = await saveAddress();
+                                        await updateOrder(address_id);
+                                    } else {
+                                        await updateOrder(addressId);
+                                    }
+                                    createZipFile();
+                                    setAddressId(0);
+                                    cleanAddress();
+                                    Alert.alert('Successful Payment', 'The order has been received.');
+                                    // props.navigation.navigate('Invoice');                                    
+                                });
+                        }, 1000);
+                    });
+            }; */
             if (addressId == 0) {
                 let address_id = await saveAddress();
                 await updateOrder(address_id);
@@ -108,15 +123,15 @@ const Address = ({ ...props }) => {
             createZipFile();
             setAddressId(0);
             cleanAddress();
-            props.navigation.navigate('Invoice');
-        } */
+            Alert.alert('Successful Payment', 'The order has been received.');
+            // props.navigation.navigate('Invoice');
+        }
     }
 
     const uploadPhotos = async () => {
         try {
             setLoadingPhotos(true);
             let orderID = await AsyncStorage.getItem('order_id');
-            let token = await AsyncStorage.getItem('token');
             console.log('orderID', orderID);
             let formData = new FormData();
             formData.append("order_id", orderID);
@@ -146,75 +161,52 @@ const Address = ({ ...props }) => {
     }
 
     const updateOrder = async (address_id) => {
-        let token = await AsyncStorage.getItem('token');
         let order_id = await AsyncStorage.getItem('order_id');
-        let response = await fetch(`http://api.impri.cl/order`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
-            },
-            body: JSON.stringify({
-                order_id,
-                address_id,
-                promocode_id: promoCodeID,
-                discount,
-                sub_total: subTotal,
-                total
-            })
+        let response = await API.put('/order', {
+            order_id,
+            address_id,
+            promocode_id: promoCodeID,
+            discount,
+            sub_total: subTotal,
+            total
         });
-        let result = await response.json();
-        if (result.state) {
-            Alert.alert('OK', result.msg);
-        } else {
-            Alert.alert('Error', result.msg);
+        console.log(response.data);
+        if (!response.data.state) {
+            Alert.alert('Error', response.data.msg);
         }
     }
 
     const createZipFile = async () => {
-        let token = await AsyncStorage.getItem('token');
         let order_id = await AsyncStorage.getItem('order_id');
-        let response = await fetch(`http://api.impri.cl/files?order_id=${order_id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
+        let response = await API.get('/files', {
+            params: {
+                order_id
             }
         });
-        let result = await response.json();
-        console.log(result);
+        console.log(response.data);
     }
 
     const saveAddress = async () => {
         if (nameAddress != '' && address != '' && number != '' && city != '' && commune != '' && province != '' && region != '') {
             setLoad(true);
-            let token = await AsyncStorage.getItem('token');
             let UID = await AsyncStorage.getItem('user_id');
-            let response = await fetch('http://api.impri.cl/user_address', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token
-                },
-                body: JSON.stringify({
-                    user_id: UID,
-                    name: nameAddress,
-                    address_line: address,
-                    number,
-                    city,
-                    commune_id: commune,
-                    province_id: province,
-                    region_id: region
-                }),
+            let response = await API.post('/user_address', {
+                user_id: UID,
+                name: nameAddress,
+                address_line: address,
+                number,
+                city,
+                commune_id: commune,
+                province_id: province,
+                region_id: region
             });
-            let result = await response.json();
             setLoad(false);
-            if (result.state) {
-                let address_id = result.address_id;
+            if (response.data.state) {
+                let address_id = response.data.address_id;
                 setAddressId(address_id);
                 return address_id;
             } else {
-                Alert.alert('Error', result.msg);
+                Alert.alert('Error', response.data.msg);
             }
         } else {
             Alert.alert('Error', 'All address fields must be completed');
@@ -222,39 +214,32 @@ const Address = ({ ...props }) => {
     }
 
     const getUserAddress = async () => {
-        let token = await AsyncStorage.getItem('token');
         let UID = await AsyncStorage.getItem('user_id');
-        let response = await fetch(`http://api.impri.cl/user_address?user_id=${UID}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
+        let response = await API.get('/user_address', {
+            params: {
+                user_id: UID
             }
         });
-        let result = await response.json();
-        if (result.state) {
+        if (response.data.state) {
             let array = [];
-            (result.address).map((item) => {
+            for (const item of response.data.address) {
                 array.push({ label: item.name, value: item.id });
-            });
+            }
             setSelectAddress(array);
         } else {
-            //Alert.alert('Aviso', result.msg);
+            Alert.alert('Aviso', response.data.msg);
         }
     }
 
     const getAddress = async (address_id) => {
-        let token = await AsyncStorage.getItem('token');
-        let response = await fetch(`http://api.impri.cl/address?address_id=${address_id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
+        let response = await API.get('/address', {
+            params: {
+                address_id
             }
         });
-        let result = await response.json();
-        if (result.state) {
-            let { name, address, number, city, commune_id, province_id, region_id } = result.address;
+        console.log(response.data);
+        if (response.data.state) {
+            let { name, address, number, city, commune_id, province_id, region_id } = response.data.address;
             await getProvinces(region_id);
             await getCommunes(province_id);
             setRegion(region_id);
@@ -266,70 +251,54 @@ const Address = ({ ...props }) => {
             setCity(city);
             setBlockAddress(true);
         } else {
-            Alert.alert('Error', result.msg);
+            Alert.alert('Error', response.data.msg);
         }
     }
 
     const getRegions = async () => {
-        let token = await AsyncStorage.getItem('token');
-        let response = await fetch(`http://api.impri.cl/regions`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
-            }
-        });
-        let result = await response.json();
-        if (result.state) {
+        let response = await API.get('/regions');
+        if (response.data.state) {
             let regions = [];
-            (result.regions).map((item) => {
+            for (const item of response.data.regions) {
                 regions.push({ label: item.region, value: item.id });
-            });
+            }
             setSelectRegions(regions);
         } else {
-            Alert.alert('Error', result.msg);
+            Alert.alert('Error', response.data.msg);
         }
     }
 
     const getProvinces = async (region_id) => {
-        let token = await AsyncStorage.getItem('token');
-        let response = await fetch(`http://api.impri.cl/provinces?region_id=${region_id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
+        let response = await API.get('/provinces', {
+            params: {
+                region_id
             }
         });
-        let result = await response.json();
-        if (result.state) {
+        if (response.data.state) {
             let provinces = [];
-            (result.provinces).map((item) => {
+            for (const item of response.data.provinces) {
                 provinces.push({ label: item.provincia, value: item.id });
-            });
+            }
             setSelectProvinces(provinces);
         } else {
-            Alert.alert('Error', result.msg);
+            Alert.alert('Error', response.data.msg);
         }
     }
 
     const getCommunes = async (province_id) => {
-        let token = await AsyncStorage.getItem('token');
-        let response = await fetch(`http://api.impri.cl/communes?province_id=${province_id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
+        let response = await API.get('/communes', {
+            params: {
+                province_id
             }
         });
-        let result = await response.json();
-        if (result.state) {
+        if (response.data.state) {
             let communes = [];
-            (result.communes).map((item) => {
+            for (const item of response.data.communes) {
                 communes.push({ label: item.comuna, value: item.id });
-            });
+            }
             setSelectCommunes(communes);
         } else {
-            Alert.alert('Error', result.msg);
+            Alert.alert('Error', response.data.msg);
         }
     }
 
@@ -373,20 +342,13 @@ const Address = ({ ...props }) => {
             Alert.alert('Error', 'You must enter the promocode');
             return false;
         }
-        let token = await AsyncStorage.getItem('token');
-        let response = await fetch(`http://api.impri.cl/promo`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
-            },
-            body: JSON.stringify({
+        let response = await API.get('/promo', {
+            params: {
                 promo_code
-            }),
+            }
         });
-        let result = await response.json();
-        if (result.state) {
-            let { id, discount } = result.code;
+        if (response.data.state) {
+            let { id, discount } = response.data.code;
             let discount_format = discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             let subtotal = calculateTotal(imagesCount);
             let total = subtotal - discount;
@@ -396,7 +358,7 @@ const Address = ({ ...props }) => {
             setTotal(price);
             setPromoCodeID(id);
         } else {
-            Alert.alert('Error', result.msg);
+            Alert.alert('Error', response.data.msg);
         }
         setDialogVisible(false);
         setPromoCode('');

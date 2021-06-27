@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Button, Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
 import TabPhotosNavigation from './TabPhotosNavigation';
 import TabOrdersNavigation from './TabOrdersNavigation';
 import MenuButton from '../components/MenuButton';
 import ProfileScreen from '../screens/profile/Profile';
-import SettingScreen from '../screens/profile/Settings';
 import WalletScreen from '../screens/profile/Wallet';
 
 const Drawer = createDrawerNavigator();
@@ -122,27 +120,6 @@ const WalletStack = () => (
 	</Stack.Navigator>
 );
 
-const SettingsStack = () => (
-	<Stack.Navigator>
-		<Stack.Screen
-			name="Ajustes"
-			component={SettingScreen}
-			options={({ navigation }) => ({
-				headerLeft: props => <MenuButton navigation={navigation} />,
-				headerTitle: (
-					<Text
-						allowFontScaling={false}
-						style={styles.title}>
-						Settings
-					</Text>
-				),
-				headerStyle: {
-					backgroundColor: '#F52D56',
-				}
-			})} />
-	</Stack.Navigator>
-);
-
 export default function MenuNavigation({ ...props }) {
 	return (
 		<Drawer.Navigator
@@ -171,10 +148,6 @@ export default function MenuNavigation({ ...props }) {
 				name="Wallet"
 				component={WalletStack}
 				options={{ drawerLabel: 'Wallet' }} />
-			<Drawer.Screen
-				name="Settings"
-				component={SettingsStack}
-				options={{ drawerLabel: 'Settings' }} />
 			<Drawer.Screen
 				name="logout"
 				component={LogOut}

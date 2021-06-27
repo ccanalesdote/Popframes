@@ -1,8 +1,8 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
-// const URL = 'http://popframesapi-env.eba-umrqg6b3.us-east-1.elasticbeanstalk.com';
-const URL = 'http://localhost:8082';
+const URL = 'http://popframesapi-env.eba-umrqg6b3.us-east-1.elasticbeanstalk.com';
+// const URL = 'http://localhost:8082';
 
 export const API = axios.create({
     baseURL: URL,
