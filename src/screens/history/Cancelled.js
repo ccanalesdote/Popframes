@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { API } from '../../services/Axios';
-import { StyleSheet, Text, ScrollView, View } from 'react-native';
+import { RefreshControl, StyleSheet, Text, ScrollView, View } from 'react-native';
 import { Card } from 'react-native-elements';
 
 const Cancelled = () => {
 
     const [orders, serOrders] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         getUserOrders();
     }, []);
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        getUserOrders();
+    }
 
     const getUserOrders = async () => {
         let response = await API.get('/user_orders', {
@@ -17,6 +23,7 @@ const Cancelled = () => {
                 state: 'cancelled'
             }
         });
+        setRefreshing(false);
         if (response.data.state) {
             serOrders(response.data.orders);
         } else {
@@ -25,7 +32,10 @@ const Cancelled = () => {
     }
 
     return (
-        <ScrollView style={styles.root}>
+        <ScrollView 
+            showsVerticalScrollIndicator={false}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            style={styles.root}>
             {
                 orders.map((item, index) => (
                     <Card key={index} containerStyle={{ borderRadius: 10, borderColor: '#FFF', height: 200, padding: 14 }}>
