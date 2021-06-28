@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ProgressScreen from '../screens/history/Progress';
 import DeliveredScreen from '../screens/history/Delivered';
-import CanceledScreen from '../screens/history/Canceled';
+import CancelledScreen from '../screens/history/Cancelled';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -18,7 +18,7 @@ export default function MenuNavigation({ ...props }) {
             }}>
             <Tab.Screen name="In Progress" component={ProgressScreen} />
             <Tab.Screen name="Delivered" component={DeliveredScreen} />
-            <Tab.Screen name="Canceled" component={CanceledScreen} />
+            <Tab.Screen name="Canceled" component={CancelledScreen} />
         </Tab.Navigator>
     );
 }

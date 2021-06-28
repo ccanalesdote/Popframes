@@ -3,7 +3,7 @@ import { API } from '../../services/Axios';
 import { StyleSheet, Text, ScrollView, View } from 'react-native';
 import { Card } from 'react-native-elements';
 
-const Progress = () => {
+const Cancelled = () => {
 
     const [orders, serOrders] = useState([]);
 
@@ -14,7 +14,7 @@ const Progress = () => {
     const getUserOrders = async () => {
         let response = await API.get('/user_orders', {
             params: {
-                state: 'progress'
+                state: 'cancelled'
             }
         });
         if (response.data.state) {
@@ -139,4 +139,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Progress;
+export default Cancelled;
