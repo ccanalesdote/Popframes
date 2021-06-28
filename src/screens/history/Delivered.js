@@ -11,13 +11,10 @@ import {
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const Orders = ({ ...props }) => {
+const Delivered = ({ ...props }) => {
 
     return (
         <View style={styles.root}>
-            <View style={styles.body}>
-                <Text>Hola</Text>
-            </View>
         </View>
     )
 }
@@ -43,4 +40,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Orders;
+export default Delivered;

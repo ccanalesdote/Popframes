@@ -11,7 +11,7 @@ import {
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const Blank = ({ ...props }) => {
+const Canceled = ({ ...props }) => {
 
     return (
         <View style={styles.root}>
@@ -40,4 +40,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Blank;
+export default Canceled;
