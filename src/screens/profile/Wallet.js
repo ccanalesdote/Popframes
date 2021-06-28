@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     payButton: {
         paddingVertical: 8,
         borderRadius: 10,
-        backgroundColor: '#F52D56'
+        backgroundColor: '#4B187F'
     },
     payText: {
         fontSize: 16,

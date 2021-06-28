@@ -109,7 +109,7 @@ function AuthStack() {
                     headerLeft: props => <BackButton navigation={navigation} />,
                     headerTitle: props => <LogoTitle step={'Step 2:'} text={'Choose your frame'} {...props} />,
                     headerStyle: {
-                        backgroundColor: '#F52D56',
+                        backgroundColor: '#4B187F',
                         height: 108
                     }
                 })} />
@@ -120,7 +120,7 @@ function AuthStack() {
                     headerLeft: props => <BackButton navigation={navigation} />,
                     headerTitle: props => <LogoTitle2 step={'Step 3:'} text={'Enter your details'} {...props} />,
                     headerStyle: {
-                        backgroundColor: '#F52D56',
+                        backgroundColor: '#4B187F',
                         height: 108
                     }
                 })} />
@@ -137,7 +137,7 @@ function AuthStack() {
                         </Text>
                     ),
                     headerStyle: {
-                        backgroundColor: '#F52D56',
+                        backgroundColor: '#4B187F',
                     }
                 })} />
             <Stack.Screen
@@ -153,7 +153,7 @@ function AuthStack() {
                         </Text>
                     ),
                     headerStyle: {
-                        backgroundColor: '#F52D56',
+                        backgroundColor: '#4B187F',
                     }
                 })} />
             <Stack.Screen
@@ -169,7 +169,7 @@ function AuthStack() {
                         </Text>
                     ),
                     headerStyle: {
-                        backgroundColor: '#F52D56',
+                        backgroundColor: '#4B187F',
                     }
                 })} />
         </Stack.Navigator >

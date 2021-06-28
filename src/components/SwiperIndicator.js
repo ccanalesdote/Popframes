@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		left: 4,
 		top: 28,
-		backgroundColor: '#F52D56'
+		backgroundColor: '#4B187F'
 	},
 	separator: {
 		width: 10

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Button, CheckBox, Input } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { API } from '../../services/Axios';
+import { Button, Input } from 'react-native-elements';
 
 const EditProfile = ({ ...props }) => {
 
@@ -17,40 +17,31 @@ const EditProfile = ({ ...props }) => {
     }, []);
 
     const getUser = async () => {
-        let email = await AsyncStorage.getItem('email');
-        let name = await AsyncStorage.getItem('name');
-        setEmail(email);
-        setName(name);
+        let user_email = await AsyncStorage.getItem('email');
+        let user_name = await AsyncStorage.getItem('name');
+        setEmail(user_email);
+        setName(user_name);
     }
 
-    const _saveChanges = async () => {
-        let apiToken = await AsyncStorage.getItem('token');
+    const saveChanges = async () => {
         let userId = await AsyncStorage.getItem('user_id');
         if (password == '') {
             try {
                 setLoading(true);
-                let response = await fetch('http://api.impri.cl/user', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apiToken': apiToken
-                    },
-                    body: JSON.stringify({
-                        user_id: userId,
-                        email,
-                        name,
-                        password: ''
-                    }),
+                let response = await API.put('/user', {
+                    user_id: userId,
+                    email,
+                    name,
+                    password: ''
                 });
-                let result = await response.json();
                 setLoading(false);
-                if (result.state) {
-                    let { email, name } = result.user;
+                if (response.data.state) {
+                    let { email, name } = response.data.user;
                     AsyncStorage.setItem('email', email);
                     AsyncStorage.setItem('name', name);
-                    Alert.alert('Success', result.msg);
+                    Alert.alert('Success', response.data.msg);
                 } else {
-                    Alert.alert('Error', result.msg);
+                    Alert.alert('Error', response.data.msg);
                 }
             } catch (error) {
                 Alert.alert(error.message);
@@ -59,28 +50,20 @@ const EditProfile = ({ ...props }) => {
             if (password === newPassword) {
                 try {
                     setLoading(true);
-                    let response = await fetch('http://api.impri.cl/user', {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'apiToken': apiToken
-                        },
-                        body: JSON.stringify({
-                            user_id: userId,
-                            email,
-                            name,
-                            password
-                        }),
+                    let response = await API.put('/user', {
+                        user_id: userId,
+                        email,
+                        name,
+                        password
                     });
-                    let result = await response.json();
                     setLoading(false);
-                    if (result.state) {
-                        let { email, name } = result.user;
+                    if (response.data.state) {
+                        let { email, name } = response.data.user;
                         AsyncStorage.setItem('email', email);
                         AsyncStorage.setItem('name', name);
-                        Alert.alert('Success', result.msg);
+                        Alert.alert('Success', response.data.msg);
                     } else {
-                        Alert.alert('Error', result.msg);
+                        Alert.alert('Error', response.data.msg);
                     }
                 } catch (error) {
                     Alert.alert(error.message);
@@ -132,14 +115,14 @@ const EditProfile = ({ ...props }) => {
             <Text
                 style={styles.title}>
                 If you don't want to change the password, just leave the fields blank.
-			</Text>
+            </Text>
             <Button
                 activeOpacity={0.6}
                 buttonStyle={styles.mailButton}
                 titleStyle={styles.mailText}
                 loading={loading}
                 title="Save changes"
-                onPress={_saveChanges}
+                onPress={saveChanges}
             />
         </ScrollView>
     )
@@ -162,9 +145,9 @@ const styles = StyleSheet.create({
         marginTop: 40,
         marginBottom: 10,
         borderRadius: 10,
-        backgroundColor: '#F52D56',
+        backgroundColor: '#4B187F',
         borderWidth: 1,
-        borderColor: '#F52D56',
+        borderColor: '#4B187F',
         height: 52
     },
     mailText: {

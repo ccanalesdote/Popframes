@@ -87,7 +87,7 @@ const ForgotPassword = ({ ...props }) => {
 
 const styles = StyleSheet.create({
     root: {
-        backgroundColor: '#F52D56',
+        backgroundColor: '#4B187F',
         padding: 16
     },
     imageContainer: {
@@ -111,13 +111,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: '#F7F7F7',
         borderWidth: 1,
-        borderColor: '#F52D56',
+        borderColor: '#4B187F',
         height: 52
     },
     mailText: {
         fontSize: 16,
         fontFamily: 'SFUIText-Semibold',
-        color: '#F52D56'
+        color: '#4B187F'
     }
 });
 

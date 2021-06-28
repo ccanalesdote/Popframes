@@ -36,7 +36,7 @@ const Address = ({ ...props }) => {
     const [blockAddress, setBlockAddress] = useState(false);
     const [selectAddress, setSelectAddress] = useState([]);
     const [imagesCount, setImagesCount] = useState(0);
-    const [totalDescription, setTotalDescription] = useState('Pay $0');
+    const [totalDescription, setTotalDescription] = useState('Pay £0');
     const [total, setTotal] = useState(0);
     const [subTotal, setSubTotal] = useState(0);
     const [dialogVisible, setDialogVisible] = useState(false);
@@ -71,61 +71,65 @@ const Address = ({ ...props }) => {
         setTotal(price);
     }
 
-    const pay = async () => {        
+    const pay = async () => {
+        if (!address) {
+            Alert.alert('Error', 'Please complete the address information.');
+            return false;
+        }
         if (loadingPhotos) {
             Alert.alert('Loading...', 'Wait a few seconds, not all your photos have been uploaded yet.');
-        } else {
-            /* const requestData = {
-                merchantIdentifier: 'merchant.com.popframes',
-                supportedNetworks: ['mastercard', 'visa'],
-                countryCode: 'US',
-                currencyCode: 'USD',
-                paymentSummaryItems: [
-                    {
-                        label: 'Payment Test',
-                        amount: '0.50',
-                    },
-                ],
-            }
-            console.log(requestData);
-            // Check if ApplePay is available
-            if (ApplePay.canMakePayments) {                
-                ApplePay.requestPayment(requestData)
-                    .then((paymentData) => {
-                        console.log(paymentData);
-                        // Simulate a request to the gateway
-                        setTimeout(() => {
-                            // Show status to user ApplePay.SUCCESS || ApplePay.FAILURE
-                            ApplePay.complete(ApplePay.SUCCESS)
-                                .then(async () => {
-                                    console.log('completed');                                    
-                                    if (addressId == 0) {
-                                        let address_id = await saveAddress();
-                                        await updateOrder(address_id);
-                                    } else {
-                                        await updateOrder(addressId);
-                                    }
-                                    createZipFile();
-                                    setAddressId(0);
-                                    cleanAddress();
-                                    Alert.alert('Successful Payment', 'The order has been received.');
-                                    // props.navigation.navigate('Invoice');                                    
-                                });
-                        }, 1000);
-                    });
-            }; */
-            if (addressId == 0) {
-                let address_id = await saveAddress();
-                await updateOrder(address_id);
-            } else {
-                await updateOrder(addressId);
-            }
-            createZipFile();
-            setAddressId(0);
-            cleanAddress();
-            Alert.alert('Successful Payment', 'The order has been received.');
-            // props.navigation.navigate('Invoice');
+            return false;
         }
+        /* const requestData = {
+            merchantIdentifier: 'merchant.com.popframes',
+            supportedNetworks: ['mastercard', 'visa'],
+            countryCode: 'US',
+            currencyCode: 'USD',
+            paymentSummaryItems: [
+                {
+                    label: 'Payment Test',
+                    amount: '0.50',
+                },
+            ],
+        }
+        console.log(requestData);
+        // Check if ApplePay is available
+        if (ApplePay.canMakePayments) {                
+            ApplePay.requestPayment(requestData)
+                .then((paymentData) => {
+                    console.log(paymentData);
+                    // Simulate a request to the gateway
+                    setTimeout(() => {
+                        // Show status to user ApplePay.SUCCESS || ApplePay.FAILURE
+                        ApplePay.complete(ApplePay.SUCCESS)
+                            .then(async () => {
+                                console.log('completed');                                    
+                                if (addressId == 0) {
+                                    let address_id = await saveAddress();
+                                    await updateOrder(address_id);
+                                } else {
+                                    await updateOrder(addressId);
+                                }
+                                createZipFile();
+                                setAddressId(0);
+                                cleanAddress();
+                                Alert.alert('Successful Payment', 'The order has been received.');
+                                // props.navigation.navigate('Invoice');                                    
+                            });
+                    }, 1000);
+                });
+        }; */
+        if (addressId == 0) {
+            let address_id = await saveAddress();
+            await updateOrder(address_id);
+        } else {
+            await updateOrder(addressId);
+        }
+        createZipFile();
+        setAddressId(0);
+        cleanAddress();
+        Alert.alert('Successful Payment', 'The order has been received.');
+        // props.navigation.navigate('Invoice');
     }
 
     const uploadPhotos = async () => {
@@ -135,7 +139,6 @@ const Address = ({ ...props }) => {
             console.log('orderID', orderID);
             let formData = new FormData();
             formData.append("order_id", orderID);
-            formData.append("test", 'prueba');
             let i = 0;
             console.log('array', croppedImagesSelected);
             for (const item of croppedImagesSelected) {
@@ -155,7 +158,7 @@ const Address = ({ ...props }) => {
             console.log(response.data);
             setLoadingPhotos(false);
         } catch (error) {
-            console.log('There has been a problem with your fetch operation: ' + error.message);
+            console.log('There has been a problem with your fetch operation <upload photos>: ' + error.message);
             throw error;
         }
     }
@@ -531,7 +534,7 @@ const Address = ({ ...props }) => {
                                 allowFontScaling={false}
                                 containerStyle={{ backgroundColor: '#FFF', borderWidth: 0, marginBottom: 20 }}
                                 fontFamily="SFUIText-Regular"
-                                checkedColor='#F52D56'
+                                checkedColor='#4B187F'
                                 textStyle={{ fontSize: 16, color: '#999999', fontWeight: 'normal' }}
                                 title='Save this address for future purchases'
                                 onPress={() => setSaveNew(!saveNew)}
@@ -555,11 +558,6 @@ const Address = ({ ...props }) => {
                             <Text
                                 allowFontScaling={false}
                                 style={styles.name}>
-                                Photo album
-                            </Text>
-                            <Text
-                                allowFontScaling={false}
-                                style={styles.name}>
                                 Shipping
                             </Text>
                             {
@@ -575,24 +573,19 @@ const Address = ({ ...props }) => {
                             <Text
                                 allowFontScaling={false}
                                 style={styles.price}>
-                                ${subTotal}
+                                £{subTotal}
                             </Text>
                             <Text
                                 allowFontScaling={false}
                                 style={styles.price}>
-                                $0
-                            </Text>
-                            <Text
-                                allowFontScaling={false}
-                                style={styles.price}>
-                                $0
+                                £0
                             </Text>
                             {
                                 discount > 0 ?
                                     <Text
                                         allowFontScaling={false}
                                         style={styles.price}>
-                                        -${discount}
+                                        -£{discount}
                                     </Text> : null
                             }
                         </View>
@@ -618,7 +611,7 @@ const Address = ({ ...props }) => {
                             <Text
                                 allowFontScaling={false}
                                 style={styles.price}>
-                                ${total}
+                                £{total}
                             </Text>
                         </View>
                     </View>
@@ -697,7 +690,7 @@ const styles = StyleSheet.create({
         left: SCREEN_WIDTH * .1,
         width: SCREEN_WIDTH * .8,
         borderRadius: 10,
-        backgroundColor: '#F52D56',
+        backgroundColor: '#4B187F',
         height: 52,
         fontSize: 24,
         justifyContent: 'center',
@@ -727,7 +720,7 @@ const styles = StyleSheet.create({
         fontFamily: 'SFUIText-Semibold',
         fontSize: 15,
         textAlign: 'left',
-        color: '#F52D56',
+        color: '#4B187F',
         marginBottom: 10
     },
     total: {

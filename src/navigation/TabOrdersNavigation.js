@@ -1,7 +1,4 @@
 import * as React from 'react';
-import { Button, Text, View } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import BlankScreen from '../screens/orders/Blank';
 
@@ -12,10 +9,10 @@ export default function MenuNavigation({ ...props }) {
         <Tab.Navigator
             tabBarOptions={{
                 style: { backgroundColor: '#FFF' },
-                activeTintColor: '#FD2E61',
+                activeTintColor: '#7124BF',
                 inactiveTintColor: '#DAD9E2',
                 labelStyle: { fontFamily: 'SFUIText-Semibold', fontSize: 14 },
-                indicatorStyle: { backgroundColor: '#FD2E61' }
+                indicatorStyle: { backgroundColor: '#7124BF' }
             }}>
             <Tab.Screen name="In Progress" component={BlankScreen} />
             <Tab.Screen name="Delivered" component={BlankScreen} />

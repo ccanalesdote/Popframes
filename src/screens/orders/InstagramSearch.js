@@ -25,7 +25,7 @@ const InstagramSearch = ({ ...props }) => {
                 onPress={goToCustomization}
                 buttonStyle={styles.payButton}
                 titleStyle={styles.payText}
-                title="Imprimir $6000" />
+                title="Print £6000" />
         </View>
     )
 }
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     },
     payButton: {
         borderRadius: 10,
-        backgroundColor: '#F52D56'
+        backgroundColor: '#4B187F'
     },
     payText: {
         fontSize: 16,

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Dimensions, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Button, Card } from 'react-native-elements';
+import { API } from '../../services/Axios';
+import { Card } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -12,11 +13,10 @@ const Profile = ({ ...props }) => {
     const [address, setAddress] = useState([]);
 
     useEffect(() => {
-        const unsubscribe = props.navigation.addListener('focus', () => {
+        return props.navigation.addListener('focus', () => {
             getUser();
             getUserAddress();
         });
-        return unsubscribe;
     }, [props.navigation]);
 
     useEffect(() => {
@@ -25,45 +25,37 @@ const Profile = ({ ...props }) => {
     }, []);
 
     const getUser = async () => {
-        let email = await AsyncStorage.getItem('email');
-        let name = await AsyncStorage.getItem('name');
-        setEmail(email);
-        setName(name);
+        let user_email = await AsyncStorage.getItem('email');
+        let user_name = await AsyncStorage.getItem('name');
+        setEmail(user_email);
+        setName(user_name);
     }
 
     const getUserAddress = async () => {
-        let token = await AsyncStorage.getItem('token');
         let UID = await AsyncStorage.getItem('user_id');
-        let response = await fetch(`http://api.impri.cl/user_address?user_id=${UID}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
+        let response = await API.get('/user_address', {
+            params: {
+                user_id: UID
             }
         });
-        let result = await response.json();
-        if (result.state) {
-            setAddress(result.address);
+        if (response.data.state) {
+            setAddress(response.data.address);
         } else {
             setAddress([]);
         }
     }
 
     const deleteAddress = async (address_id) => {
-        let token = await AsyncStorage.getItem('token');
-        let response = await fetch(`http://api.impri.cl/user_address?address_id=${address_id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
+        let response = await API.delete('/user_address', {
+            params: {
+                address_id
             }
         });
-        let result = await response.json();
-        if (result.state) {
-            Alert.alert('Success', result.msg);
+        if (response.data.state) {
+            Alert.alert('Success', response.data.msg);
             getUserAddress();
         } else {
-            Alert.alert('Error', result.msg);
+            Alert.alert('Error', response.data.msg);
         }
     }
 
@@ -206,7 +198,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         width: 40,
         height: 40,
-        backgroundColor: '#F52D56',
+        backgroundColor: '#4B187F',
         alignItems: 'center',
         alignSelf: 'flex-end',
         justifyContent: 'center'

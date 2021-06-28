@@ -24,7 +24,7 @@ const Invoice = ({ ...props }) => {
                 {/* <Button
                     buttonStyle={styles.payButton}
                     titleStyle={styles.payText}
-                    title="Pagar $6000"
+                    title="Pagar £6000"
                 /> */}
             </View>
         </View>
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     payButton: {
         paddingVertical: 8,
         borderRadius: 10,
-        backgroundColor: '#F52D56'
+        backgroundColor: '#4B187F'
     },
     payText: {
         fontSize: 16,

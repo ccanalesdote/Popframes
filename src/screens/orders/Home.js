@@ -13,7 +13,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const Home = ({ ...props }) => {
 
-    const [totalDescription, setTotalDescription] = useState('Print $0');
+    const [totalDescription, setTotalDescription] = useState('Print £0');
     const [countImages, setCountImages] = useState(0);
     const [showPromo, setShowPromo] = useState(false);
     const [percent, setPercent] = useState(0);
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         left: SCREEN_WIDTH * .1,
         width: SCREEN_WIDTH * .8,
         borderRadius: 10,
-        backgroundColor: '#F52D56DC',
+        backgroundColor: '#4B187FDC',
         height: 52,
         fontSize: 24,
         justifyContent: 'center',

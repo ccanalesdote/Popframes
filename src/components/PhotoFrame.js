@@ -119,7 +119,7 @@ const Customize = ({ image, addCountImage, minusCountImage, cropImages }) => {
                 onTouchOutside={() => setDialogVisible(false)}
                 positiveButton={{
                     title: "Delete",
-                    titleStyle: { color: '#F52D56' },
+                    titleStyle: { color: '#4B187F' },
                     onPress: () => deleteImage()
                 }}
                 negativeButton={{
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         width: 40,
         height: 40,
-        backgroundColor: '#F52D56',
+        backgroundColor: '#4B187F',
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         width: 40,
         height: 40,
-        backgroundColor: '#F52D56',
+        backgroundColor: '#4B187F',
         alignItems: 'center',
         justifyContent: 'center'
     },

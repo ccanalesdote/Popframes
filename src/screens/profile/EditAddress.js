@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import { API } from '../../services/Axios';
 import RNPickerSelect from 'react-native-picker-select';
-import { Button, CheckBox, Input } from 'react-native-elements';
+import { Button, Input } from 'react-native-elements';
 import Toast from 'react-native-tiny-toast'
 
 const EditProfile = ({ ...props }) => {
@@ -27,82 +28,61 @@ const EditProfile = ({ ...props }) => {
     }, []);
 
     const getRegions = async () => {
-        let token = await AsyncStorage.getItem('token');
-        let response = await fetch(`http://api.impri.cl/regions`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
-            }
-        });
-        let result = await response.json();
-        if (result.state) {
+        let response = await API.get('/regions');
+        if (response.data.state) {
             let regions = [];
-            (result.regions).map((item) => {
+            for (const item of response.data.regions) {
                 regions.push({ label: item.region, value: item.id });
-            });
+            }
             setSelectRegions(regions);
         } else {
-            Alert.alert('Error', result.msg);
+            Alert.alert('Error', response.data.msg);
         }
     }
 
     const getProvinces = async (region_id) => {
-        let token = await AsyncStorage.getItem('token');
-        let response = await fetch(`http://api.impri.cl/provinces?region_id=${region_id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
+        let response = await API.get('/provinces', {
+            params: {
+                region_id
             }
         });
-        let result = await response.json();
-        if (result.state) {
+        if (response.data.state) {
             let provinces = [];
-            (result.provinces).map((item) => {
+            for (const item of response.data.provinces) {
                 provinces.push({ label: item.provincia, value: item.id });
-            });
+            }
             setSelectProvinces(provinces);
-        } else if (response.status == 200) {
-            Alert.alert('Error', result.msg);
+        } else {
+            Alert.alert('Error', response.data.msg);
         }
     }
 
     const getCommunes = async (province_id) => {
-        let token = await AsyncStorage.getItem('token');
-        let response = await fetch(`http://api.impri.cl/communes?province_id=${province_id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
+        let response = await API.get('/communes', {
+            params: {
+                province_id
             }
         });
-        let result = await response.json();
-        if (result.state) {
+        if (response.data.state) {
             let communes = [];
-            (result.communes).map((item) => {
+            for (const item of response.data.communes) {
                 communes.push({ label: item.comuna, value: item.id });
-            });
+            }
             setSelectCommunes(communes);
         } else {
-            Alert.alert('Error', result.msg);
+            Alert.alert('Error', response.data.msg);
         }
     }
 
     const getAddress = async () => {
         const toast = Toast.showLoading('Cargando...');
-        let token = await AsyncStorage.getItem('token');
-        let response = await fetch(`http://api.impri.cl/address?address_id=${address_id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
+        let response = await API.get('/address', {
+            params: {
+                address_id
             }
         });
-        let result = await response.json();
-        if (result.state) {
-            console.log(result.address);
-            let { name, address, number, city, commune_id, province_id, region_id } = result.address;
+        if (response.data.state) {
+            let { name, address, number, city, commune_id, province_id, region_id } = response.data.address;
             await getProvinces(region_id);
             await getCommunes(province_id);
             setRegion(region_id);
@@ -114,7 +94,7 @@ const EditProfile = ({ ...props }) => {
             setCity(city);
             Toast.hide(toast);
         } else {
-            Alert.alert('Error', result.msg);
+            Alert.alert('Error', response.data.msg);
             Toast.hide(toast);
         }
     }
@@ -134,30 +114,21 @@ const EditProfile = ({ ...props }) => {
     const saveChanges = async () => {
         if (nameAddress != '' && address != '' && number != '' && city != '' && commune != '' && province != '' && region != '') {
             setLoading(true);
-            let token = await AsyncStorage.getItem('token');
-            let response = await fetch('http://api.impri.cl/user_address', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token
-                },
-                body: JSON.stringify({
-                    address_id,
-                    name: nameAddress,
-                    address_line: address,
-                    number,
-                    city,
-                    commune_id: commune,
-                    province_id: province,
-                    region_id: region
-                }),
+            let response = await API.put('/user_address', {
+                address_id,
+                name: nameAddress,
+                address_line: address,
+                number,
+                city,
+                commune_id: commune,
+                province_id: province,
+                region_id: region
             });
-            let result = await response.json();
             setLoading(false);
-            if (result.state) {
-                Alert.alert('Correcto', result.msg);                
+            if (response.data.state) {
+                Alert.alert('Correcto', response.data.msg);
             } else {
-                Alert.alert('Error', result.msg);
+                Alert.alert('Error', response.data.msg);
             }
         } else {
             Alert.alert('Error', 'All fields must be completed');
@@ -218,7 +189,7 @@ const EditProfile = ({ ...props }) => {
                     borderBottomColor: '#C8C9CB',
                     borderBottomWidth: 1
                 }}
-            />            
+            />
             <RNPickerSelect
                 /* useNativeAndroidPickerStyle={false} */
                 style={pickerStyle}
@@ -283,9 +254,9 @@ const styles = StyleSheet.create({
         marginTop: 40,
         marginBottom: 10,
         borderRadius: 10,
-        backgroundColor: '#F52D56',
+        backgroundColor: '#4B187F',
         borderWidth: 1,
-        borderColor: '#F52D56',
+        borderColor: '#4B187F',
         height: 52
     },
     mailText: {

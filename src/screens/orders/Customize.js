@@ -22,7 +22,7 @@ const Customize = ({ ...props }) => {
 
     // hooks
     const [imagesCount, setImagesCount] = useState(count);
-    const [totalDescription, setTotalDescription] = useState('Print $0');
+    const [totalDescription, setTotalDescription] = useState('Print £0');
     const [loading, setLoading] = useState(false);
     const [cropImages, setCropImages] = useState(false);
 
@@ -111,8 +111,8 @@ const styles = StyleSheet.create({
         left: SCREEN_WIDTH * .1,
         width: SCREEN_WIDTH * .8,
         borderRadius: 10,
-        //backgroundColor: '#F52D56DC',
-        backgroundColor: '#F52D56',
+        //backgroundColor: '#4B187FDC',
+        backgroundColor: '#4B187F',
         height: 52,
         fontSize: 24,
         justifyContent: 'center',

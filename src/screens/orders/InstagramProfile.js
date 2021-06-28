@@ -21,7 +21,7 @@ const InstagramProfile = ({ ...props }) => {
     const [error, setError] = useState('');
     const [load, setLoad] = useState(false);
     const [refresh, setRefresh] = useState(false);
-    const [totalDescription, setTotalDescription] = useState('Imprimir $0');
+    const [totalDescription, setTotalDescription] = useState('Print £0');
     const [countImages, setCountImages] = useState(0);
     const [showPromo, setShowPromo] = useState(false);
     const [percent, setPercent] = useState(0);
@@ -257,7 +257,7 @@ const InstagramProfile = ({ ...props }) => {
                         onPress={() => console.log(photos)}
                         buttonStyle={styles.payButton}
                         titleStyle={styles.payText}
-                        title="Imprimir $6000" />
+                        title="Print £6000" />
                     : null
             }
             <InstagramLogin
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
         left: SCREEN_WIDTH * .1,
         width: SCREEN_WIDTH * .8,
         borderRadius: 10,
-        backgroundColor: '#F52D56',
+        backgroundColor: '#4B187F',
         height: 52
     },
     payText: {
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         marginBottom: 10,
         borderRadius: 10,
-        backgroundColor: '#F52D56',
+        backgroundColor: '#4B187F',
         justifyContent: 'flex-start'
     },
     instagramText: {

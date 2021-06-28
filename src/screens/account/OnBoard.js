@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         marginBottom: 10,
         borderRadius: 10,
-        backgroundColor: '#F52D56',
+        backgroundColor: '#4B187F',
         justifyContent: 'flex-start'
     },
     mailButton: {
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: '#F7F7F7',
         borderWidth: 1,
-        borderColor: '#F52D56',
+        borderColor: '#4B187F',
         height: 52
     },
     instagramText: {
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     mailText: {
         fontSize: 16,
         fontFamily: 'SFUIText-Semibold',
-        color: '#F52D56'
+        color: '#4B187F'
     }
 });
 

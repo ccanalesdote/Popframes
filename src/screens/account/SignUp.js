@@ -113,7 +113,7 @@ const SignUp = ({ ...props }) => {
                 <CheckBox
                     activeOpacity={0.6}
                     allowFontScaling={false}
-                    containerStyle={{ backgroundColor: '#F52D56', borderWidth: 0, marginVertical: 20 }}
+                    containerStyle={{ backgroundColor: '#4B187F', borderWidth: 0, marginVertical: 20 }}
                     fontFamily="SFUIText-Regular"
                     checkedColor='#FFF'
                     textStyle={{ fontSize: 18, color: '#FFF', fontWeight: 'normal' }}
@@ -126,7 +126,7 @@ const SignUp = ({ ...props }) => {
                     buttonStyle={styles.mailButton}
                     titleStyle={styles.mailText}
                     loading={loading}
-                    loadingProps={{ color: '#F52D56' }}
+                    loadingProps={{ color: '#4B187F' }}
                     title="Register"
                     onPress={_signUp}
                 />
@@ -148,7 +148,7 @@ const SignUp = ({ ...props }) => {
 
 const styles = StyleSheet.create({
     root: {
-        backgroundColor: '#F52D56',
+        backgroundColor: '#4B187F',
         padding: 16,
     },
     imageContainer: {
@@ -183,13 +183,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: '#F7F7F7',
         borderWidth: 1,
-        borderColor: '#F52D56',
+        borderColor: '#4B187F',
         height: 52
     },
     mailText: {
         fontSize: 16,
         fontFamily: 'SFUIText-Semibold',
-        color: '#F52D56'
+        color: '#4B187F'
     }
 });
 

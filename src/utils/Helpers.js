@@ -24,5 +24,5 @@ export const calculateDescriptionTotal = (value, title) => {
     if (value >= 13 && value <= 20) result = 8.00;
     if (value >= 21 && value <= 50) result = 18.00;
     if (value >= 51 && value <= 100) result = 34.00;
-    return `${title} $${result}`;
+    return `${title} £${result}`;
 }

@@ -49,7 +49,7 @@ const HomeStack = () => {
 					headerLeft: props => <MenuButton navigation={navigation} />,
 					headerTitle: props => <LogoTitle {...props} />,
 					headerStyle: {
-						backgroundColor: '#F52D56',
+						backgroundColor: '#4B187F',
 						height: 108
 					}
 				})} />
@@ -72,7 +72,7 @@ const ProfileStack = () => (
 					</Text>
 				),
 				headerStyle: {
-					backgroundColor: '#F52D56',
+					backgroundColor: '#4B187F',
 				}
 			})} />
 	</Stack.Navigator>
@@ -93,7 +93,7 @@ const OrdersStack = () => (
 					</Text>
 				),
 				headerStyle: {
-					backgroundColor: '#F52D56',
+					backgroundColor: '#4B187F',
 				}
 			})} />
 	</Stack.Navigator>
@@ -114,7 +114,7 @@ const WalletStack = () => (
 					</Text>
 				),
 				headerStyle: {
-					backgroundColor: '#F52D56',
+					backgroundColor: '#4B187F',
 				}
 			})} />
 	</Stack.Navigator>
@@ -124,7 +124,7 @@ export default function MenuNavigation({ ...props }) {
 	return (
 		<Drawer.Navigator
 			drawerContentOptions={{
-				activeTintColor: '#F52D56',
+				activeTintColor: '#4B187F',
 				labelStyle: { fontFamily: 'SFUIText-Semibold' }
 			}}
 			drawerStyle={{
