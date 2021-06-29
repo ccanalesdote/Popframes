@@ -1,18 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import {
-    Alert,
-    Platform,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
-} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import InstagramLogin from 'react-native-instagram-login';
+import React, { useEffect, useRef } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { Button } from 'react-native-elements';
 import ImageWalkthrough from '../../assets/images/walkthrough.png';
 import Swiper from '../../components/Swiper';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 const swiperSlides = [
     {
@@ -41,27 +31,12 @@ const OnBoard = ({ ...props }) => {
         console.log(_instagramLoginRef);
     }, [_instagramLoginRef])
 
-    const signInAsync = () => {
-        //
-    }
-
     const goToSignIn = () => {
         props.navigation.push('SignIn')
     }
 
     const goToSignUp = () => {
         props.navigation.push('SignUp');
-    }
-
-    const goToForgotPassword = () => {
-        //props.navigation.push('ForgotPassword')
-    }
-
-    const loginInstagram = async (data) => {
-        console.log(data);
-        AsyncStorage.setItem('access_token', data.access_token);
-        AsyncStorage.setItem('user_id', (data.user_id).toString());
-        props.navigation.push('Auth');
     }
 
     return (
@@ -77,20 +52,6 @@ const OnBoard = ({ ...props }) => {
                 />
             </View>
             <View style={styles.body}>
-                {/* <Button
-                    icon={
-                        <Icon
-                            name="logo-instagram"
-                            size={32}
-                            color="white"
-                        />
-                    }
-                    onPress={() => _instagramLoginRef.current.show()}
-                    allowFontScaling={false}
-                    buttonStyle={styles.instagramButton}
-                    titleStyle={styles.instagramText}
-                    title="Continuar con Instagram"
-                /> */}
                 <Button
                     activeOpacity={0.6}
                     allowFontScaling={false}
@@ -109,15 +70,6 @@ const OnBoard = ({ ...props }) => {
                         Already have an account? <Text style={{ fontFamily: 'SFUIText-Bold' }}>Log In</Text>
                     </Text>
                 </TouchableOpacity>
-                {/* <InstagramLogin
-                    ref={_instagramLoginRef}
-                    appId='211059646802354'
-                    appSecret='3a76f6b919fa1100569d19c2c77b5896'
-                    redirectUrl="https://www.google.com/"
-                    scopes={['user_profile', 'user_media']}
-                    onLoginSuccess={loginInstagram}
-                    onLoginFailure={(data) => console.log(data)}
-                /> */}
             </View>
         </View>
     )

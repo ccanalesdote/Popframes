@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
 	},
 	slidePhoto: {
 		width: width,
-		height: width * 1.4
+		height: width * 1.8
 	},
 	slideTitle: {
 		bottom: 80,
