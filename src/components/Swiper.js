@@ -76,15 +76,15 @@ const styles = StyleSheet.create({
 	},
 	slidePhoto: {
 		width: width,
-		height: width * 1.8
+		height: width * 1.9
 	},
 	slideTitle: {
 		bottom: 80,
 		position: 'absolute',
 		fontFamily: 'SFUIText-Bold',
-		fontSize: 30,
+		fontSize: 40,
 		marginTop: 18,
-		color: '#FFFFFF',
+		color: '#4B187F',
 		textAlign: 'center'
 	},
 	slideSubtitle: {

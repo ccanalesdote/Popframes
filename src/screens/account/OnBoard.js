@@ -1,26 +1,24 @@
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import { Button } from 'react-native-elements';
-import ImageWalkthrough from '../../assets/images/walkthrough.png';
+import ImageWalkthrough1 from '../../assets/images/01.png';
+import ImageWalkthrough2 from '../../assets/images/02.png';
+import ImageWalkthrough3 from '../../assets/images/03.png';
 import Swiper from '../../components/Swiper';
 
 const swiperSlides = [
     {
-        photo: ImageWalkthrough,
-        title: 'Decorate your house with your memories'
+        photo: ImageWalkthrough1,
+        title: 'Make your fav memories pop'
     },
     {
-        photo: ImageWalkthrough,
-        title: 'Decorate your house with your memories 2'
+        photo: ImageWalkthrough2,
+        title: 'Unique colourful frames'
     },
     {
-        photo: ImageWalkthrough,
-        title: 'Decorate your house with your memories 3'
-    },
-    {
-        photo: ImageWalkthrough,
-        title: 'Decorate your house with your memories 4'
-    },
+        photo: ImageWalkthrough3,
+        title: 'Delivered right to your door'
+    }
 ];
 
 const OnBoard = ({ ...props }) => {

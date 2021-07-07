@@ -41,7 +41,7 @@ const SwiperIndicator = ({ ...props }) => {
 					{
 						translateX: progress.interpolate({
 							inputRange: [0, slideWidth * slidesNum - 48],
-							outputRange: [-4, 4 * slidesNum + 15 * (slidesNum - 1) + 4],
+							outputRange: [-4, 4 * slidesNum + 16 * (slidesNum - 1) + 4],
 							extrapolate: 'clamp'
 						})
 					}

@@ -118,7 +118,7 @@ const Profile = ({ ...props }) => {
 			</Text>
             {
                 address.map((item, index) => (
-                    <Card key={index} containerStyle={{ borderRadius: 10, borderColor: '#FFF', height: 130, padding: 14 }}>
+                    <Card key={index} containerStyle={{ borderRadius: 10, borderColor: '#FFF', height: 142, padding: 14 }}>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ flex: 2, marginTop: 10 }}>
                                 <Text
@@ -129,9 +129,14 @@ const Profile = ({ ...props }) => {
                                 <Text
                                     allowFontScaling={false}
                                     style={styles.text}>
-                                    {item.address}{'\n'}
-                                    {item.commune}, {item.province}{'\n'}
-                                    {item.region}
+                                    {item.address_line_1}{'\n'}
+                                    {item.address_line_2}{item.address_line_2 ? '\n' : null}
+                                    {item.city}, {item.country_name}
+                                </Text>
+                                <Text
+                                    allowFontScaling={false}
+                                    style={styles.post_text}>
+                                    {item.post_code}
                                 </Text>
                             </View>
                             <View style={{ alignSelf: 'center', flexDirection: 'row' }}>
@@ -190,6 +195,13 @@ const styles = StyleSheet.create({
     text: {
         marginTop: 10,
         fontFamily: 'SFUIText-Regular',
+        fontSize: 14,
+        textAlign: 'left',
+        color: '#9B9B9B'
+    },
+    post_text: {
+        marginTop: 10,
+        fontFamily: 'SFUIText-Semibold',
         fontSize: 14,
         textAlign: 'left',
         color: '#9B9B9B'
