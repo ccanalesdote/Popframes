@@ -46,7 +46,7 @@ const EditProfile = ({ ...props }) => {
     }
 
     const saveChanges = async () => {
-        if (nameAddress != '' && addressLine1 != '' && addressLine2 != '' && city != '' && countryName != '' && postCode != '') {
+        if (nameAddress != '' && addressLine1 != '' && city != '' && countryName != '' && postCode != '') {
             setLoading(true);
             let response = await API.put('/user_address', {
                 address_id,
@@ -163,24 +163,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'SFUIText-Semibold',
         color: '#FFF'
-    }
-});
-
-const pickerStyle = StyleSheet.create({
-    inputIOS: {
-        color: "#000",
-        marginVertical: 10,
-        marginLeft: 20,
-        fontSize: 16,
-        fontFamily: 'SFUIText-Regular'
-    },
-    inputAndroid: {
-        //color: "#929292",
-        color: "#000",
-        fontSize: 20,
-        fontFamily: 'SFUIText-Regular',
-        marginVertical: 4,
-        marginLeft: 15
     }
 });
 

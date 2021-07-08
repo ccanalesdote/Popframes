@@ -22,15 +22,11 @@ const Address = ({ ...props }) => {
     // hooks
     const [addressId, setAddressId] = useState(0);
     const [nameAddress, setNameAddress] = useState('');
-    const [address, setAddress] = useState(null);
-    const [number, setNumber] = useState('');
+    const [addressLine1, setAddressLine1] = useState('');
+    const [addressLine2, setAddressLine2] = useState('');
     const [city, setCity] = useState('');
-    const [commune, setCommune] = useState('');
-    const [province, setProvince] = useState('');
-    const [region, setRegion] = useState('');
-    const [selectRegions, setSelectRegions] = useState([]);
-    const [selectProvinces, setSelectProvinces] = useState([]);
-    const [selectCommunes, setSelectCommunes] = useState([]);
+    const [countryName, setCountryName] = useState('');
+    const [postCode, setPostCode] = useState('');
     const [saveNew, setSaveNew] = useState(false);
     const [showNewBox, setShowNewBox] = useState(true);
     const [blockAddress, setBlockAddress] = useState(false);
@@ -49,7 +45,6 @@ const Address = ({ ...props }) => {
     useEffect(() => {
         uploadPhotos();
         getUserAddress();
-        getRegions();
         getAmount();
     }, []);
 
@@ -72,7 +67,7 @@ const Address = ({ ...props }) => {
     }
 
     const pay = async () => {
-        if (!address) {
+        if (!addressLine1) {
             Alert.alert('Error', 'Please complete the address information.');
             return false;
         }
@@ -190,18 +185,17 @@ const Address = ({ ...props }) => {
     }
 
     const saveAddress = async () => {
-        if (nameAddress != '' && address != '' && number != '' && city != '' && commune != '' && province != '' && region != '') {
+        if (nameAddress != '' && addressLine1 != '' && city != '' && countryName != '' && postCode != '') {
             setLoad(true);
             let UID = await AsyncStorage.getItem('user_id');
             let response = await API.post('/user_address', {
                 user_id: UID,
                 name: nameAddress,
-                address_line: address,
-                number,
+                address_line_1: addressLine1,
+                address_line_2: addressLine2,                
                 city,
-                commune_id: commune,
-                province_id: province,
-                region_id: region
+                country_name: countryName,
+                post_code: postCode                
             });
             setLoad(false);
             if (response.data.state) {
@@ -242,64 +236,14 @@ const Address = ({ ...props }) => {
         });
         console.log(response.data);
         if (response.data.state) {
-            let { name, address, number, city, commune_id, province_id, region_id } = response.data.address;
-            await getProvinces(region_id);
-            await getCommunes(province_id);
-            setRegion(region_id);
-            setProvince(province_id);
-            setCommune(commune_id);
+            let { name, address_line_1, address_line_2, city, country_name, post_code } = response.data.address;
             setNameAddress(name);
-            setAddress(address);
-            setNumber(number.toString());
+            setAddressLine1(address_line_1);
+            setAddressLine2(address_line_2);            
             setCity(city);
+            setCountryName(country_name);
+            setPostCode(post_code);
             setBlockAddress(true);
-        } else {
-            Alert.alert('Error', response.data.msg);
-        }
-    }
-
-    const getRegions = async () => {
-        let response = await API.get('/regions');
-        if (response.data.state) {
-            let regions = [];
-            for (const item of response.data.regions) {
-                regions.push({ label: item.region, value: item.id });
-            }
-            setSelectRegions(regions);
-        } else {
-            Alert.alert('Error', response.data.msg);
-        }
-    }
-
-    const getProvinces = async (region_id) => {
-        let response = await API.get('/provinces', {
-            params: {
-                region_id
-            }
-        });
-        if (response.data.state) {
-            let provinces = [];
-            for (const item of response.data.provinces) {
-                provinces.push({ label: item.provincia, value: item.id });
-            }
-            setSelectProvinces(provinces);
-        } else {
-            Alert.alert('Error', response.data.msg);
-        }
-    }
-
-    const getCommunes = async (province_id) => {
-        let response = await API.get('/communes', {
-            params: {
-                province_id
-            }
-        });
-        if (response.data.state) {
-            let communes = [];
-            for (const item of response.data.communes) {
-                communes.push({ label: item.comuna, value: item.id });
-            }
-            setSelectCommunes(communes);
         } else {
             Alert.alert('Error', response.data.msg);
         }
@@ -320,24 +264,11 @@ const Address = ({ ...props }) => {
         setShowNewBox(true);
         setBlockAddress(false);
         setNameAddress('');
-        setAddress('');
-        setNumber('');
+        setAddressLine1('');
+        setAddressLine2('');
         setCity('');
-        setRegion('');
-        setProvince('');
-        setCommune('');
-    }
-
-    const changeRegion = (value) => {
-        setRegion(value);
-        setProvince('');
-        if (value) getProvinces(value);
-    }
-
-    const changeProvince = (value) => {
-        setProvince(value);
-        setCommune('');
-        if (value) getCommunes(value);
+        setCountryName('');
+        setPostCode('');
     }
 
     const getPromoDiscount = async (promo_code) => {
@@ -428,7 +359,7 @@ const Address = ({ ...props }) => {
                         inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 24 }}
                         inputStyle={{ color: '#000', fontFamily: 'SFUIText-Regular', marginLeft: 10, fontSize: 16 }}
                         placeholderTextColor='#C8C9CB'
-                        placeholder='Address&nbsp;name'
+                        placeholder='Friendly&nbsp;name'
                         onChangeText={text => setNameAddress(text)}
                         disabled={blockAddress}
                         value={nameAddress}
@@ -438,20 +369,20 @@ const Address = ({ ...props }) => {
                         inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 0 }}
                         inputStyle={{ color: '#000', fontFamily: 'SFUIText-Regular', marginLeft: 10, fontSize: 16 }}
                         placeholderTextColor='#C8C9CB'
-                        placeholder='Address'
-                        onChangeText={text => setAddress(text)}
+                        placeholder='Address Line 1'
+                        onChangeText={text => setAddressLine1(text)}
                         disabled={blockAddress}
-                        value={address}
+                        value={addressLine1}
                     />
                     <Input
                         allowFontScaling={false}
                         inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 0 }}
                         inputStyle={{ color: '#000', fontFamily: 'SFUIText-Regular', marginLeft: 10, fontSize: 16 }}
                         placeholderTextColor='#C8C9CB'
-                        placeholder='Number'
-                        onChangeText={text => setNumber(text)}
+                        placeholder='Address Line 2'
+                        onChangeText={text => setAddressLine2(text)}
                         disabled={blockAddress}
-                        value={number}
+                        value={addressLine2}
                     />
                     <Input
                         allowFontScaling={false}
@@ -463,70 +394,27 @@ const Address = ({ ...props }) => {
                         disabled={blockAddress}
                         value={city}
                     />
-                    <View style={{ height: 0 }} />
-                    <RNPickerSelect
-                        /* useNativeAndroidPickerStyle={false} */
-                        style={pickerStyle}
-                        placeholder={{ label: 'Select a Region' }}
-                        onValueChange={(value) => changeRegion(value)}
-                        items={selectRegions}
+                    <Input
+                        allowFontScaling={false}
+                        inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 0 }}
+                        inputStyle={{ color: '#000', fontFamily: 'SFUIText-Regular', marginLeft: 10, fontSize: 16 }}
+                        placeholderTextColor='#C8C9CB'
+                        placeholder='Country'
+                        onChangeText={text => setCountryName(text)}
                         disabled={blockAddress}
-                        value={region}
-                        Icon={() => {
-                            return <Icon name="ios-chevron-down" size={28} color="#C8C9CB" />;
-                        }}
+                        value={countryName}
                     />
-                    <View
-                        style={{
-                            marginTop: 0,
-                            marginBottom: 24,
-                            marginHorizontal: 10,
-                            borderBottomColor: '#C8C9CB',
-                            borderBottomWidth: 1
-                        }}
-                    />
-                    <RNPickerSelect
-                        /* useNativeAndroidPickerStyle={false} */
-                        style={pickerStyle}
-                        placeholder={{ label: 'Select a Province' }}
-                        onValueChange={(value) => changeProvince(value)}
-                        items={selectProvinces}
+                    <Input
+                        allowFontScaling={false}
+                        inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 0 }}
+                        inputStyle={{ color: '#000', fontFamily: 'SFUIText-Regular', marginLeft: 10, fontSize: 16 }}
+                        placeholderTextColor='#C8C9CB'
+                        placeholder='Post Code'
+                        onChangeText={text => setPostCode(text)}
                         disabled={blockAddress}
-                        value={province}
-                        Icon={() => {
-                            return <Icon name="ios-chevron-down" size={28} color="#C8C9CB" />;
-                        }}
+                        value={postCode}
                     />
-                    <View
-                        style={{
-                            marginTop: 0,
-                            marginBottom: 24,
-                            marginHorizontal: 10,
-                            borderBottomColor: '#C8C9CB',
-                            borderBottomWidth: 1
-                        }}
-                    />
-                    <RNPickerSelect
-                        /* useNativeAndroidPickerStyle={false} */
-                        style={pickerStyle}
-                        placeholder={{ label: 'Select a Commune' }}
-                        onValueChange={(value) => setCommune(value)}
-                        items={selectCommunes}
-                        disabled={blockAddress}
-                        value={commune}
-                        Icon={() => {
-                            return <Icon name="ios-chevron-down" size={28} color="#C8C9CB" />;
-                        }}
-                    />
-                    <View
-                        style={{
-                            marginTop: 0,
-                            marginBottom: 10,
-                            marginHorizontal: 10,
-                            borderBottomColor: '#C8C9CB',
-                            borderBottomWidth: 1
-                        }}
-                    />
+                    <View style={{ height: 0 }} />                    
                     {
                         showNewBox ?
                             <CheckBox

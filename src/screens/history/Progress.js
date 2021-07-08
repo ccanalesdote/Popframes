@@ -111,7 +111,7 @@ const Progress = () => {
                         <Text
                             allowFontScaling={false}
                             style={styles.text}>
-                            {item.address} #${item.number}, {item.comuna}.
+                            {item.address_line_1} {item.address_line_2} {'\n' + item.city}
                         </Text>
                     </Card>
                 ))

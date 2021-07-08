@@ -21,8 +21,6 @@ const Home = ({ ...props }) => {
     // gestión de estado
     const setImages = useSetRecoilState(images);
     const imagesSelected = useRecoilValue(images);
-    //const setCountImages = useSetRecoilState(countImages);
-    //const countImagesState = useRecoilValue(countImages);
 
     useEffect(() => {
         calculateMsg();

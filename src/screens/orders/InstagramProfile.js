@@ -63,7 +63,7 @@ const InstagramProfile = ({ ...props }) => {
     };
 
     const getUser = async () => {
-        let accessToken = await AsyncStorage.getItem('access_token');
+        let accessToken = await AsyncStorage.getItem('access_token');        
         getMultimedia(accessToken);
     }
 
@@ -115,7 +115,6 @@ const InstagramProfile = ({ ...props }) => {
                 }
             } catch (e) {
                 console.log(e);
-                Alert.alert(e.message);
             }
         }
     }
