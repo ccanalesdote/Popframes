@@ -65,7 +65,7 @@ const SignUp = ({ ...props }) => {
                 <View style={styles.imageContainer}>
                     <Image
                         style={{ width: 70, height: 62, alignSelf: 'center' }}
-                        source={require('../../assets/images/impri.png')} />
+                        source={require('../../assets/images/popframes.png')} />
                 </View>
                 <Text
                     allowFontScaling={false}

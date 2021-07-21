@@ -31,8 +31,8 @@ const Address = ({ ...props }) => {
     const [showNewBox, setShowNewBox] = useState(true);
     const [blockAddress, setBlockAddress] = useState(false);
     const [selectAddress, setSelectAddress] = useState([]);
-    const [imagesCount, setImagesCount] = useState(0);
     const [totalDescription, setTotalDescription] = useState('Pay £0');
+    const [imagesCount, setImagesCount] = useState(0);
     const [total, setTotal] = useState(0);
     const [subTotal, setSubTotal] = useState(0);
     const [dialogVisible, setDialogVisible] = useState(false);
@@ -56,12 +56,12 @@ const Address = ({ ...props }) => {
     }, []);
 
     const getAmount = async () => {
+        let images_price = await AsyncStorage.getItem('images_price');
         let images_count = await AsyncStorage.getItem('images_count');
-        let total = calculateDescriptionTotal(images_count, 'Pay');
-        let number = calculateTotal(images_count);
-        let price = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        let text = `Pay £${images_price}`;
+        let price = images_price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         setImagesCount(images_count);
-        setTotalDescription(total);
+        setTotalDescription(text);
         setSubTotal(price);
         setTotal(price);
     }
@@ -284,10 +284,10 @@ const Address = ({ ...props }) => {
         if (response.data.state) {
             let { id, discount } = response.data.code;
             let discount_format = discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-            let subtotal = calculateTotal(imagesCount);
-            let total = subtotal - discount;
-            let price = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-            setTotalDescription(`Pay ${price}`);
+            let total = subTotal - discount;
+            let price = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");            
+            let text = `Pay £${price}`;
+            setTotalDescription(text);
             setDiscount(discount_format);
             setTotal(price);
             setPromoCodeID(id);

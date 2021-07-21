@@ -31,8 +31,7 @@ const Customize = ({ ...props }) => {
     }, []);
 
     useEffect(() => {
-        let total = calculateDescriptionTotal(imagesCount, 'Next');
-        setTotalDescription(total);
+        calculate(imagesCount);
         AsyncStorage.setItem('images_count', imagesCount.toString());
         if (imagesCount < 1) {
             props.navigation.navigate('Home');
@@ -70,6 +69,19 @@ const Customize = ({ ...props }) => {
             AsyncStorage.setItem('order_id', order_id.toString());
             setLoading(false);
             props.navigation.navigate('Address');
+        }
+    }
+
+    const calculate = async (quantity) => {
+        let response = await API.get('/calculate_price', {
+            params: {
+                quantity
+            }
+        });
+        if (response.data.state) {
+            let text = `Next £${response.data.amount}`;
+            AsyncStorage.setItem('images_price', (response.data.amount).toString());
+            setTotalDescription(text);
         }
     }
 

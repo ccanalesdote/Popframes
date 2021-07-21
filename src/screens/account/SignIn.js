@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, Fragment } from 'react';
 import { Alert, Image, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { API } from '../../services/Axios';
@@ -60,7 +60,7 @@ const SignIn = ({ ...props }) => {
                 <View style={styles.imageContainer}>
                     <Image
                         style={{ width: 70, height: 62, alignSelf: 'center' }}
-                        source={require('../../assets/images/impri.png')} />
+                        source={require('../../assets/images/popframes.png')} />
                 </View>
                 <Text
                     allowFontScaling={false}
