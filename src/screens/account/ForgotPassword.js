@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import {
-    Alert,
-    Image,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
-} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
-import { Button, CheckBox, Input } from 'react-native-elements';
+import React, { useState } from 'react';
+import { Alert, Image, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { API } from '../../services/Axios';
+import { Button, Input } from 'react-native-elements';
 import { validateEmail } from '../../utils/Helpers';
-import Icon from 'react-native-vector-icons/Ionicons';
 import BackButton from '../../components/BackButton';
+
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 
 const ForgotPassword = ({ ...props }) => {
 
@@ -29,21 +21,13 @@ const ForgotPassword = ({ ...props }) => {
             return false;
         }
         try {
-            let response = await fetch('http://167.172.134.231/api_rest/public/index.php/Usuarios/remember/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email
-                }),
+            let response = await API.post('/recover_password', {
+                email
             });
-            if (response.status == 401) {
-                let result = await response.json();
-                Alert.alert('Error', result.mensaje);
-            } else if (response.status == 200) {
-                let result = await response.json();
-                Alert.alert('Success', 'If the email is in our records, you will receive an message.');
+            if (response.data.state) {
+                Alert.alert('Success', response.data.msg);
+            } else {
+                Alert.alert('Error', response.data.msg);
             }
         } catch (error) {
             Alert.alert(error.message);
@@ -52,19 +36,19 @@ const ForgotPassword = ({ ...props }) => {
 
     return (
         <ScrollView style={styles.root}>
-            <View style={{ marginTop: 20 }} >
+            <View style={{ marginTop: STATUSBAR_HEIGHT + 20 }} >
                 <BackButton navigation={props.navigation} />
             </View>
             <View style={styles.imageContainer}>
                 <Image
                     style={{ width: 70, height: 62, alignSelf: 'center' }}
-                    source={require('../../assets/images/impri.png')} />
+                    source={require('../../assets/images/popframes.png')} />
             </View>
             <Text
                 allowFontScaling={false}
                 style={styles.title}>
                 Enter your email
-                </Text>
+            </Text>
             <Input
                 allowFontScaling={false}
                 inputContainerStyle={{ borderBottomColor: '#FFF', marginTop: 20 }}
