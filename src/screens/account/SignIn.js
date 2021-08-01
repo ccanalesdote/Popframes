@@ -1,10 +1,11 @@
 import React, { useState, Fragment } from 'react';
-import { Alert, Image, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Platform, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { API } from '../../services/Axios';
 import { Button, Input } from 'react-native-elements';
 import { validateEmail } from '../../utils/Helpers';
 import BackButton from '../../components/BackButton';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 
@@ -13,14 +14,21 @@ const SignIn = ({ ...props }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [dialogMsg, setDialogMsg] = useState('');
 
     const _LoginWithMail = async () => {
         if (email == '' || password == '') {
-            Alert.alert('Error', 'Please fill in all the fields.');
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg('Please fill in all the fields');
             return false;
         }
         if (!validateEmail(email)) {
-            Alert.alert('Error', 'Please enter a valid email.');
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg('Please enter a valid email');
             return false;
         }
         try {
@@ -39,10 +47,14 @@ const SignIn = ({ ...props }) => {
                 AsyncStorage.setItem('user_id', user_id.toString());
                 props.navigation.push('Auth');
             } else {
-                Alert.alert('Error', response.data.msg);
+                setDialogVisible(true);
+                setDialogTitle('Error');
+                setDialogMsg(response.data.msg);                
             }
         } catch (error) {
-            Alert.alert(error.message);
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg(error.message);
         }
     }
 
@@ -105,6 +117,18 @@ const SignIn = ({ ...props }) => {
                     </Text>
                 </TouchableOpacity>
             </ScrollView>
+            <ConfirmDialog
+                title={dialogTitle}
+                message={dialogMsg}
+                visible={dialogVisible}
+                onTouchOutside={() => setDialogVisible(false)}
+                positiveButton={{
+                    title: "OK",
+                    titleStyle: { color: '#4B187F' },
+                    onPress: () => setDialogVisible(false)
+                }}
+            >
+            </ConfirmDialog>
         </Fragment>
     )
 }

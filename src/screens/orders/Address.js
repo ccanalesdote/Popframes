@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Alert, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { API, FormAPI } from '../../services/Axios';
 import { Card, CheckBox, Input } from 'react-native-elements';
@@ -41,6 +41,9 @@ const Address = ({ ...props }) => {
     const [discount, setDiscount] = useState(0);
     const [load, setLoad] = useState(false);
     const [loadingPhotos, setLoadingPhotos] = useState(false);
+    const [dialogAlertVisible, setDialogAlertVisible] = useState(false);
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [dialogMsg, setDialogMsg] = useState('');
 
     useEffect(() => {
         uploadPhotos();
@@ -68,11 +71,15 @@ const Address = ({ ...props }) => {
 
     const pay = async () => {
         if (!addressLine1) {
-            Alert.alert('Error', 'Please complete the address information.');
+            setDialogAlertVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg('Please complete the address information');
             return false;
         }
         if (loadingPhotos) {
-            Alert.alert('Loading...', 'Wait a few seconds, not all your photos have been uploaded yet.');
+            setDialogAlertVisible(true);
+            setDialogTitle('Loading...');
+            setDialogMsg('Wait a few seconds, not all your photos have been uploaded yet');
             return false;
         }
         /* const requestData = {
@@ -107,8 +114,7 @@ const Address = ({ ...props }) => {
                                 }
                                 createZipFile();
                                 setAddressId(0);
-                                cleanAddress();
-                                Alert.alert('Successful Payment', 'The order has been received.');
+                                cleanAddress();                                
                                 // props.navigation.navigate('Invoice');                                    
                             });
                     }, 1000);
@@ -123,7 +129,9 @@ const Address = ({ ...props }) => {
         createZipFile();
         setAddressId(0);
         cleanAddress();
-        Alert.alert('Successful Payment', 'The order has been received.');
+        setDialogAlertVisible(true);
+        setDialogTitle('Successful Payment');
+        setDialogMsg('The order has been received');
         // props.navigation.navigate('Invoice');
     }
 
@@ -170,7 +178,9 @@ const Address = ({ ...props }) => {
         });
         console.log(response.data);
         if (!response.data.state) {
-            Alert.alert('Error', response.data.msg);
+            setDialogAlertVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg(response.data.msg);
         }
     }
 
@@ -192,10 +202,10 @@ const Address = ({ ...props }) => {
                 user_id: UID,
                 name: nameAddress,
                 address_line_1: addressLine1,
-                address_line_2: addressLine2,                
+                address_line_2: addressLine2,
                 city,
                 country_name: countryName,
-                post_code: postCode                
+                post_code: postCode
             });
             setLoad(false);
             if (response.data.state) {
@@ -203,10 +213,14 @@ const Address = ({ ...props }) => {
                 setAddressId(address_id);
                 return address_id;
             } else {
-                Alert.alert('Error', response.data.msg);
+                setDialogAlertVisible(true);
+                setDialogTitle('Error');
+                setDialogMsg(response.data.msg);
             }
         } else {
-            Alert.alert('Error', 'All address fields must be completed');
+            setDialogAlertVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg('All address fields must be completed');
         }
     }
 
@@ -224,7 +238,9 @@ const Address = ({ ...props }) => {
             }
             setSelectAddress(array);
         } else {
-            Alert.alert('Aviso', response.data.msg);
+            setDialogAlertVisible(true);
+            setDialogTitle('Warning');
+            setDialogMsg(response.data.msg);
         }
     }
 
@@ -239,13 +255,15 @@ const Address = ({ ...props }) => {
             let { name, address_line_1, address_line_2, city, country_name, post_code } = response.data.address;
             setNameAddress(name);
             setAddressLine1(address_line_1);
-            setAddressLine2(address_line_2);            
+            setAddressLine2(address_line_2);
             setCity(city);
             setCountryName(country_name);
             setPostCode(post_code);
             setBlockAddress(true);
         } else {
-            Alert.alert('Error', response.data.msg);
+            setDialogAlertVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg(response.data.msg);            
         }
     }
 
@@ -273,7 +291,9 @@ const Address = ({ ...props }) => {
 
     const getPromoDiscount = async (promo_code) => {
         if (!promoCode) {
-            Alert.alert('Error', 'You must enter the promocode');
+            setDialogAlertVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg('You must enter the promocode');            
             return false;
         }
         let response = await API.get('/promo', {
@@ -285,14 +305,16 @@ const Address = ({ ...props }) => {
             let { id, discount } = response.data.code;
             let discount_format = discount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             let total = subTotal - discount;
-            let price = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");            
+            let price = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
             let text = `Pay £${price}`;
             setTotalDescription(text);
             setDiscount(discount_format);
             setTotal(price);
             setPromoCodeID(id);
         } else {
-            Alert.alert('Error', response.data.msg);
+            setDialogAlertVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg(response.data.msg);              
         }
         setDialogVisible(false);
         setPromoCode('');
@@ -414,7 +436,7 @@ const Address = ({ ...props }) => {
                         disabled={blockAddress}
                         value={postCode}
                     />
-                    <View style={{ height: 0 }} />                    
+                    <View style={{ height: 0 }} />
                     {
                         showNewBox ?
                             <CheckBox
@@ -562,6 +584,18 @@ const Address = ({ ...props }) => {
                         value={promoCode}
                     />
                 </View>
+            </ConfirmDialog>
+            <ConfirmDialog
+                title={dialogTitle}
+                message={dialogMsg}
+                visible={dialogAlertVisible}
+                onTouchOutside={() => setDialogAlertVisible(false)}
+                positiveButton={{
+                    title: "OK",
+                    titleStyle: { color: '#4B187F' },
+                    onPress: () => setDialogAlertVisible(false)
+                }}
+            >
             </ConfirmDialog>
         </View>
     )

@@ -5,12 +5,18 @@ import { API } from '../../services/Axios';
 import { Card } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from 'react-native-gesture-handler';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 
 const Profile = ({ ...props }) => {
 
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [address, setAddress] = useState([]);
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [dialogDeleteVisible, setDialogDeleteVisible] = useState(false);
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [dialogMsg, setDialogMsg] = useState('');
+    const [addressToDelete, setAddressToDelete] = useState('');
 
     useEffect(() => {
         return props.navigation.addListener('focus', () => {
@@ -45,34 +51,28 @@ const Profile = ({ ...props }) => {
         }
     }
 
-    const deleteAddress = async (address_id) => {
+    const deleteAddress = async () => {        
         let response = await API.delete('/user_address', {
             params: {
-                address_id
+                address_id: addressToDelete
             }
         });
+        setDialogDeleteVisible(false);
         if (response.data.state) {
-            Alert.alert('Success', response.data.msg);
-            getUserAddress();
+            setDialogVisible(true);
+            setDialogTitle('Success');
+            setDialogMsg(response.data.msg);
+            getUserAddress();            
         } else {
-            Alert.alert('Error', response.data.msg);
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg(response.data.msg);
         }
     }
 
     const handleDelete = async (address_id) => {
-        Alert.alert(
-            'Delete Address',
-            'Are you sure to delete the address?',
-            [
-                {
-                    text: 'Cancel',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel'
-                },
-                { text: 'OK', onPress: () => deleteAddress(address_id) }
-            ],
-            { cancelable: false }
-        );
+        setDialogDeleteVisible(true);
+        setAddressToDelete(address_id);
     }
 
     return (
@@ -81,7 +81,7 @@ const Profile = ({ ...props }) => {
                 allowFontScaling={false}
                 style={styles.title}>
                 My personal information
-			</Text>
+            </Text>
             <Card containerStyle={{ borderRadius: 10, borderColor: '#FFF', height: 100, padding: 14 }}>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 2, marginTop: 10 }}>
@@ -115,7 +115,7 @@ const Profile = ({ ...props }) => {
                 allowFontScaling={false}
                 style={styles.title}>
                 My addresses
-			</Text>
+            </Text>
             {
                 address.map((item, index) => (
                     <Card key={index} containerStyle={{ borderRadius: 10, borderColor: '#FFF', height: 142, padding: 14 }}>
@@ -169,6 +169,34 @@ const Profile = ({ ...props }) => {
                 ))
             }
             <View style={{ height: 40 }} />
+            <ConfirmDialog
+                title="Delete Address"
+                message="Are you sure to delete the address?"
+                visible={dialogDeleteVisible}
+                onTouchOutside={() => setDialogDeleteVisible(false)}
+                positiveButton={{
+                    title: "Delete",
+                    titleStyle: { color: '#4B187F' },
+                    onPress: () => deleteAddress()
+                }}
+                negativeButton={{
+                    title: "Cancel",
+                    titleStyle: { color: '#787879' },
+                    onPress: () => setDialogDeleteVisible(false)
+                }} >
+            </ConfirmDialog>
+            <ConfirmDialog
+                title={dialogTitle}
+                message={dialogMsg}
+                visible={dialogVisible}
+                onTouchOutside={() => setDialogVisible(false)}
+                positiveButton={{
+                    title: "OK",
+                    titleStyle: { color: '#4B187F' },
+                    onPress: () => setDialogVisible(false)
+                }}
+            >
+            </ConfirmDialog>
         </ScrollView>
     )
 }

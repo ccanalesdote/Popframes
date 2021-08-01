@@ -3,6 +3,7 @@ import { Alert, ScrollView, StyleSheet, Text } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { API } from '../../services/Axios';
 import { Button, Input } from 'react-native-elements';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 
 const EditProfile = ({ ...props }) => {
 
@@ -11,6 +12,9 @@ const EditProfile = ({ ...props }) => {
     const [newPassword, setNewPassword] = useState('');
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [dialogMsg, setDialogMsg] = useState('');
 
     useEffect(() => {
         getUser();
@@ -39,12 +43,18 @@ const EditProfile = ({ ...props }) => {
                     let { email, name } = response.data.user;
                     AsyncStorage.setItem('email', email);
                     AsyncStorage.setItem('name', name);
-                    Alert.alert('Success', response.data.msg);
+                    setDialogVisible(true);
+                    setDialogTitle('Success');
+                    setDialogMsg(response.data.msg);
                 } else {
-                    Alert.alert('Error', response.data.msg);
+                    setDialogVisible(true);
+                    setDialogTitle('Error');
+                    setDialogMsg(response.data.msg);
                 }
             } catch (error) {
-                Alert.alert(error.message);
+                setDialogVisible(true);
+                setDialogTitle('Error');
+                setDialogMsg(error.message);
             }
         } else {
             if (password === newPassword) {
@@ -61,15 +71,23 @@ const EditProfile = ({ ...props }) => {
                         let { email, name } = response.data.user;
                         AsyncStorage.setItem('email', email);
                         AsyncStorage.setItem('name', name);
-                        Alert.alert('Success', response.data.msg);
+                        setDialogVisible(true);
+                        setDialogTitle('Success');
+                        setDialogMsg(response.data.msg);                        
                     } else {
-                        Alert.alert('Error', response.data.msg);
+                        setDialogVisible(true);
+                        setDialogTitle('Error');
+                        setDialogMsg(response.data.msg);                        
                     }
                 } catch (error) {
-                    Alert.alert(error.message);
+                    setDialogVisible(true);
+                    setDialogTitle('Error');
+                    setDialogMsg(error.message);                    
                 }
             } else {
-                Alert.alert('Error', `Passwords don't match.`);
+                setDialogVisible(true);
+                setDialogTitle('Error');
+                setDialogMsg(`Passwords don't match`);                
             }
         }
     }
@@ -124,6 +142,18 @@ const EditProfile = ({ ...props }) => {
                 title="Save changes"
                 onPress={saveChanges}
             />
+            <ConfirmDialog
+                title={dialogTitle}
+                message={dialogMsg}
+                visible={dialogVisible}
+                onTouchOutside={() => setDialogVisible(false)}
+                positiveButton={{
+                    title: "OK",
+                    titleStyle: { color: '#4B187F' },
+                    onPress: () => setDialogVisible(false)
+                }}
+            >
+            </ConfirmDialog>
         </ScrollView>
     )
 }

@@ -15,7 +15,7 @@ const ImageEdit = ({ image, cropImages }) => {
 
     const [imageHeight, setImageHeight] = useState(w - 120);
     const [cropperParams, setCropperParams] = useState({});
-    const [vertical, setVertical] = useState(false);
+    const [vertical, setVertical] = useState(true);
     // gestión de estado para las imágenes recortadas
     const setCroppedImages = useSetRecoilState(croppedImages);
     const setDoCropImages = useSetRecoilState(doCropImages);

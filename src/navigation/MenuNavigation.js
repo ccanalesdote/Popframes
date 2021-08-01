@@ -7,7 +7,6 @@ import TabPhotosNavigation from './TabPhotosNavigation';
 import TabOrdersNavigation from './TabOrdersNavigation';
 import MenuButton from '../components/MenuButton';
 import ProfileScreen from '../screens/profile/Profile';
-import WalletScreen from '../screens/profile/Wallet';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -99,27 +98,6 @@ const OrdersStack = () => (
 	</Stack.Navigator>
 );
 
-const WalletStack = () => (
-	<Stack.Navigator>
-		<Stack.Screen
-			name="Wallet"
-			component={WalletScreen}
-			options={({ navigation }) => ({
-				headerLeft: props => <MenuButton navigation={navigation} />,
-				headerTitle: (
-					<Text
-						allowFontScaling={false}
-						style={styles.title}>
-						Wallet
-					</Text>
-				),
-				headerStyle: {
-					backgroundColor: '#4B187F',
-				}
-			})} />
-	</Stack.Navigator>
-);
-
 export default function MenuNavigation({ ...props }) {
 	return (
 		<Drawer.Navigator
@@ -144,10 +122,6 @@ export default function MenuNavigation({ ...props }) {
 				name="Orders"
 				component={OrdersStack}
 				options={{ drawerLabel: 'My Orders' }} />
-			<Drawer.Screen
-				name="Wallet"
-				component={WalletStack}
-				options={{ drawerLabel: 'Wallet' }} />
 			<Drawer.Screen
 				name="logout"
 				component={LogOut}

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Alert, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { API } from '../../services/Axios';
 import PhotoFrame from '../../components/PhotoFrame';
 import { ScrollView } from 'react-native-gesture-handler';
-import { calculateDescriptionTotal } from "../../utils/Helpers";
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import _ from 'lodash';
 import { images, croppedImages, doCropImages } from '../../store/atoms';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -25,6 +25,9 @@ const Customize = ({ ...props }) => {
     const [totalDescription, setTotalDescription] = useState('Print £0');
     const [loading, setLoading] = useState(false);
     const [cropImages, setCropImages] = useState(false);
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [dialogMsg, setDialogMsg] = useState('');
 
     useEffect(() => {
         setCroppedImages([]);
@@ -56,7 +59,9 @@ const Customize = ({ ...props }) => {
         if (response.data.state) {
             return response.data.order_id;
         } else {
-            Alert.alert('Error', response.data.msg);
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg(response.data.msg);               
             return 0;
         }
     }
@@ -108,6 +113,18 @@ const Customize = ({ ...props }) => {
                     }
                 </TouchableOpacity>
             </View>
+            <ConfirmDialog
+                title={dialogTitle}
+                message={dialogMsg}
+                visible={dialogVisible}
+                onTouchOutside={() => setDialogVisible(false)}
+                positiveButton={{
+                    title: "OK",
+                    titleStyle: { color: '#4B187F' },
+                    onPress: () => setDialogVisible(false)
+                }}
+            >
+            </ConfirmDialog>
         </View>
     )
 }

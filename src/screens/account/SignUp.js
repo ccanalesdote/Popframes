@@ -4,6 +4,7 @@ import { API } from '../../services/Axios';
 import { Button, CheckBox, Input } from 'react-native-elements';
 import { validateEmail } from '../../utils/Helpers';
 import BackButton from '../../components/BackButton';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 
@@ -15,6 +16,9 @@ const SignUp = ({ ...props }) => {
     const [repeatPassword, setRepeatPassword] = useState('');
     const [offers, setOffers] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [dialogMsg, setDialogMsg] = useState('');
 
     const goToSignIn = () => {
         props.navigation.push('SignIn')
@@ -22,15 +26,21 @@ const SignUp = ({ ...props }) => {
 
     const _signUp = async () => {
         if (email == '' || password == '' || name == '' || repeatPassword == '') {
-            Alert.alert('Error', 'Please fill in all the fields.');
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg('Please fill in all the fields');
             return false;
         }
         if (!validateEmail(email)) {
-            Alert.alert('Error', 'Please enter a valid email.');
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg('Please enter a valid email');
             return false;
         }
         if (password != repeatPassword) {
-            Alert.alert('Error', 'Passwords do not match.');
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg('Passwords do not match');
             return false;
         }
         try {
@@ -43,13 +53,19 @@ const SignUp = ({ ...props }) => {
             setLoading(false);
             console.log(response.data);
             if (response.data.state) {
-                Alert.alert('Success', response.data.msg);
+                setDialogVisible(true);
+                setDialogTitle('Success');
+                setDialogMsg(response.data.msg);
                 props.navigation.push('SignIn');
             } else {
-                Alert.alert('Error', response.data.msg);
+                setDialogVisible(true);
+                setDialogTitle('Error');
+                setDialogMsg(response.data.msg);
             }
         } catch (error) {
-            Alert.alert(error);
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg(error);            
         }
     }
 
@@ -105,7 +121,7 @@ const SignUp = ({ ...props }) => {
                     inputContainerStyle={{ borderBottomColor: '#FFF', marginTop: 20 }}
                     inputStyle={{ color: '#FFF', fontFamily: 'SFUIText-Regular' }}
                     placeholderTextColor='#FFF'
-                    placeholder='Repeat&nbsp;la&nbsp;password'
+                    placeholder='Repeat&nbsp;password'
                     secureTextEntry={true}
                     onChangeText={text => setRepeatPassword(text)}
                     value={repeatPassword}
@@ -142,6 +158,18 @@ const SignUp = ({ ...props }) => {
                 </TouchableOpacity>
                 <View style={{ height: Platform.OS == 'ios' ? 180 : 0 }} />
             </ScrollView>
+            <ConfirmDialog
+                title={dialogTitle}
+                message={dialogMsg}
+                visible={dialogVisible}
+                onTouchOutside={() => setDialogVisible(false)}
+                positiveButton={{
+                    title: "OK",
+                    titleStyle: { color: '#4B187F' },
+                    onPress: () => setDialogVisible(false)
+                }}
+            >
+            </ConfirmDialog>
         </Fragment>
     )
 }

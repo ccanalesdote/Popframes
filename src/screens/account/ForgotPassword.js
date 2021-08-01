@@ -1,36 +1,53 @@
 import React, { useState } from 'react';
-import { Alert, Image, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { API } from '../../services/Axios';
 import { Button, Input } from 'react-native-elements';
 import { validateEmail } from '../../utils/Helpers';
 import BackButton from '../../components/BackButton';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
 
 const ForgotPassword = ({ ...props }) => {
 
     const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [dialogMsg, setDialogMsg] = useState('');
 
-    const _LoginWithMail = async () => {
+    const recover = async () => {
         if (email == '') {
-            Alert.alert('Error', 'Please complete the email.');
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg('Please complete the email');            
             return false;
         }
         if (!validateEmail(email)) {
-            Alert.alert('Error', 'Please enter a valid email.');
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg('Please enter a valid email');            
             return false;
         }
         try {
+            setLoading(true);
             let response = await API.post('/recover_password', {
                 email
             });
+            setLoading(false);
             if (response.data.state) {
-                Alert.alert('Success', response.data.msg);
+                setDialogVisible(true);
+                setDialogTitle('Success');
+                setDialogMsg(response.data.msg);
             } else {
-                Alert.alert('Error', response.data.msg);
+                setDialogVisible(true);
+                setDialogTitle('Error');
+                setDialogMsg(response.data.msg);
             }
         } catch (error) {
-            Alert.alert(error.message);
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg(error.message);            
         }
     }
 
@@ -60,11 +77,25 @@ const ForgotPassword = ({ ...props }) => {
             />
             <Button
                 activeOpacity={0.6}
-                onPress={_LoginWithMail}
+                onPress={recover}
                 buttonStyle={styles.mailButton}
                 titleStyle={styles.mailText}
+                loading={loading}
+                loadingProps={{ color: '#4B187F' }}
                 title="Recover password"
             />
+            <ConfirmDialog
+                title={dialogTitle}
+                message={dialogMsg}
+                visible={dialogVisible}
+                onTouchOutside={() => setDialogVisible(false)}
+                positiveButton={{
+                    title: "OK",
+                    titleStyle: { color: '#4B187F' },
+                    onPress: () => setDialogVisible(false)
+                }}
+            >
+            </ConfirmDialog>
         </ScrollView>
     )
 }

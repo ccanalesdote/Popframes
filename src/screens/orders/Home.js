@@ -3,6 +3,7 @@ import { Alert, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } fr
 import { API } from '../../services/Axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CameraRollSelector from "react-native-camera-roll-selector";
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { images } from '../../store/atoms';
 import _ from 'lodash';
@@ -16,6 +17,9 @@ const Home = ({ ...props }) => {
     const [showPromo, setShowPromo] = useState(false);
     const [nextStepEnable, setNextStepEnable] = useState(true);
     const [promoMsg, setPromoMsg] = useState('');
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [dialogMsg, setDialogMsg] = useState('');
     // gestión de estado
     const setImages = useSetRecoilState(images);
     const imagesSelected = useRecoilValue(images);
@@ -63,7 +67,9 @@ const Home = ({ ...props }) => {
         if (imagesSelected.length > 0) {
             props.navigation.navigate('Customize');
         } else {
-            Alert.alert('Error', 'You must select at least one image');
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg('You must select at least one image');            
             return false;
         }
     }
@@ -115,6 +121,18 @@ const Home = ({ ...props }) => {
                     </TouchableOpacity>
                 </View>
             </View>
+            <ConfirmDialog
+                title={dialogTitle}
+                message={dialogMsg}
+                visible={dialogVisible}
+                onTouchOutside={() => setDialogVisible(false)}
+                positiveButton={{
+                    title: "OK",
+                    titleStyle: { color: '#4B187F' },
+                    onPress: () => setDialogVisible(false)
+                }}
+            >
+            </ConfirmDialog>
         </Fragment>
     )
 }

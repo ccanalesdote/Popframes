@@ -4,7 +4,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { API } from '../../services/Axios';
 import RNPickerSelect from 'react-native-picker-select';
 import { Button, Input } from 'react-native-elements';
-import Toast from 'react-native-tiny-toast'
+import Toast from 'react-native-tiny-toast';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 
 const EditProfile = ({ ...props }) => {
 
@@ -15,6 +16,9 @@ const EditProfile = ({ ...props }) => {
     const [postCode, setPostCode] = useState('');
     const [city, setCity] = useState('');
     const [loading, setLoading] = useState(false);
+    const [dialogVisible, setDialogVisible] = useState(false);
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [dialogMsg, setDialogMsg] = useState('');
 
     const address_id = props.route.params.address_id;
 
@@ -40,7 +44,9 @@ const EditProfile = ({ ...props }) => {
             setCity(city);
             Toast.hide(toast);
         } else {
-            Alert.alert('Error', response.data.msg);
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg(response.data.msg);
             Toast.hide(toast);
         }
     }
@@ -52,19 +58,25 @@ const EditProfile = ({ ...props }) => {
                 address_id,
                 name: nameAddress,
                 address_line_1: addressLine1,
-                address_line_2: addressLine2,                
+                address_line_2: addressLine2,
                 city,
                 country_name: countryName,
-                post_code: postCode                
+                post_code: postCode
             });
             setLoading(false);
             if (response.data.state) {
-                Alert.alert('Success', response.data.msg);
+                setDialogVisible(true);
+                setDialogTitle('Success');
+                setDialogMsg(response.data.msg);                
             } else {
-                Alert.alert('Error', response.data.msg);
+                setDialogVisible(true);
+                setDialogTitle('Error');
+                setDialogMsg(response.data.msg);                
             }
         } else {
-            Alert.alert('Error', 'All fields must be completed');
+            setDialogVisible(true);
+            setDialogTitle('Error');
+            setDialogMsg('All fields must be completed');            
         }
     }
 
@@ -96,7 +108,7 @@ const EditProfile = ({ ...props }) => {
                 placeholder='Address Line 2'
                 onChangeText={text => setAddressLine2(text)}
                 value={addressLine2}
-            />                     
+            />
             <Input
                 allowFontScaling={false}
                 inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 0 }}
@@ -105,7 +117,7 @@ const EditProfile = ({ ...props }) => {
                 placeholder='City'
                 onChangeText={text => setCity(text)}
                 value={city}
-            />    
+            />
             <Input
                 allowFontScaling={false}
                 inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 0 }}
@@ -114,7 +126,7 @@ const EditProfile = ({ ...props }) => {
                 placeholder='Country'
                 onChangeText={text => setCountryName(text)}
                 value={countryName}
-            />    
+            />
             <Input
                 allowFontScaling={false}
                 inputContainerStyle={{ borderBottomColor: '#C8C9CB', marginTop: 0 }}
@@ -123,7 +135,7 @@ const EditProfile = ({ ...props }) => {
                 placeholder='Post Code'
                 onChangeText={text => setPostCode(text)}
                 value={postCode}
-            />           
+            />
             <Button
                 activeOpacity={0.6}
                 buttonStyle={styles.mailButton}
@@ -133,6 +145,18 @@ const EditProfile = ({ ...props }) => {
                 onPress={saveChanges}
             />
             <View style={{ height: 20 }} />
+            <ConfirmDialog
+                title={dialogTitle}
+                message={dialogMsg}
+                visible={dialogVisible}
+                onTouchOutside={() => setDialogVisible(false)}
+                positiveButton={{
+                    title: "OK",
+                    titleStyle: { color: '#4B187F' },
+                    onPress: () => setDialogVisible(false)
+                }}
+            >
+            </ConfirmDialog>
         </ScrollView>
     )
 }
