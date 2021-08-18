@@ -15,6 +15,7 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* PopframesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* PopframesTests.m */; };
+		32B1D42C26CCB25D00180938 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 32B1D42B26CCB25D00180938 /* splash.png */; };
 		38B82709249441B38163463F /* SFUIText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EF4DA5B5305D4634B1B78D98 /* SFUIText-Regular.ttf */; };
 		492753A4343C4F0A96902F48 /* SFUIText-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5CC981F85ECB49CCB32480F5 /* SFUIText-Light.ttf */; };
 		775C6AA1FD12CB42CCE57F38 /* libPods-Popframes-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 478D969AFB5A344658F202B3 /* libPods-Popframes-tvOSTests.a */; };
@@ -63,6 +64,7 @@
 		2D02E4901E0B4A5D006451C7 /* Popframes-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Popframes-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DD1477F67594216AE91B98B /* SFUIText-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFUIText-Semibold.ttf"; path = "../src/assets/fonts/SFUIText-Semibold.ttf"; sourceTree = "<group>"; };
 		325BE90425AD3CED0099A0D6 /* Popframes.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Popframes.entitlements; path = Popframes/Popframes.entitlements; sourceTree = "<group>"; };
+		32B1D42B26CCB25D00180938 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = splash.png; path = ../src/assets/images/splash.png; sourceTree = "<group>"; };
 		3D092D38E678416CA93D7A25 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		40061AE7462889BBA99A3E29 /* Pods-Popframes-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Popframes-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Popframes-tvOS/Pods-Popframes-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		41CDB275E3AC436A99F81FF5 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				32B1D42B26CCB25D00180938 /* splash.png */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = Popframes;
@@ -400,6 +403,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32B1D42C26CCB25D00180938 /* splash.png in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				B9D0B0BC25F3429CA70EBB5D /* SFUIText-Bold.ttf in Resources */,
