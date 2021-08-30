@@ -82,15 +82,16 @@ const Address = ({ ...props }) => {
             setDialogMsg('Wait a few seconds, not all your photos have been uploaded yet');
             return false;
         }
-        /* const requestData = {
+        let images_price = await AsyncStorage.getItem('images_price');
+        const requestData = {
             merchantIdentifier: 'merchant.com.popframes',
             supportedNetworks: ['mastercard', 'visa'],
             countryCode: 'US',
             currencyCode: 'USD',
             paymentSummaryItems: [
                 {
-                    label: 'Payment Test',
-                    amount: '0.50',
+                    label: 'Popframes',
+                    amount: images_price,
                 },
             ],
         }
@@ -105,7 +106,7 @@ const Address = ({ ...props }) => {
                         // Show status to user ApplePay.SUCCESS || ApplePay.FAILURE
                         ApplePay.complete(ApplePay.SUCCESS)
                             .then(async () => {
-                                console.log('completed');                                    
+                                console.log('pay completed');                                    
                                 if (addressId == 0) {
                                     let address_id = await saveAddress();
                                     await updateOrder(address_id);
@@ -115,24 +116,16 @@ const Address = ({ ...props }) => {
                                 createZipFile();
                                 setAddressId(0);
                                 cleanAddress();                                
-                                // props.navigation.navigate('Invoice');                                    
+                                props.navigation.navigate('Invoice');                                  
                             });
                     }, 1000);
                 });
-        }; */
-        if (addressId == 0) {
-            let address_id = await saveAddress();
-            await updateOrder(address_id);
         } else {
-            await updateOrder(addressId);
+            console.log('no payments');
         }
-        createZipFile();
-        setAddressId(0);
-        cleanAddress();
         setDialogAlertVisible(true);
         setDialogTitle('Successful Payment');
         setDialogMsg('The order has been received');
-        // props.navigation.navigate('Invoice');
     }
 
     const uploadPhotos = async () => {
